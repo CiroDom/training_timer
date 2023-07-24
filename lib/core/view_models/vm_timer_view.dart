@@ -36,7 +36,7 @@ class VmTimerView extends ChangeNotifier {
 
     audioPlayer.play(assetSource);
   }
-  
+
   void _toogleRest() {
     _rest = !_rest;
     print(_rest);
@@ -92,7 +92,7 @@ class VmTimerView extends ChangeNotifier {
     _toogleRest();
 
     for (int i = totalSeconds; i >= 0; i--) {
-      _putInRightUnities(totalSeconds);
+      _putInRightUnities(i);
 
       _hoursToString(_hours);
       _minsToString(_minutes);
@@ -103,17 +103,16 @@ class VmTimerView extends ChangeNotifier {
       print(_visual);
 
       await Future.delayed(const Duration(seconds: 1));
-      totalSeconds--;
     }
   }
 
   Future<void> _showExecVisual() async {
-    _changeVisual(_model.executionDuration);
+    await _changeVisual(_model.executionDuration);
     print('Exec');
   }
 
   Future<void> _showRestVisual() async {
-    _changeVisual(_model.restDuration);
+    await _changeVisual(_model.restDuration);
     print('Rest');
   }
 
