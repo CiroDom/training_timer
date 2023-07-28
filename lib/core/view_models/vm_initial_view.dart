@@ -82,7 +82,7 @@ class VmInitialView extends ChangeNotifier {
   void _invalidTimeFunction(BuildContext context, String msg) {
     final snackBar = SnackBar(
       content: Text(msg),
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 700),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

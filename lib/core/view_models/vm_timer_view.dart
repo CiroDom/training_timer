@@ -9,7 +9,7 @@ class VmTimerView extends ChangeNotifier {
 
   VmTimerView({required TimeTraining model}) : _model = model;
 
-  String _visual = 'visual';
+  String _visual = 'Vamos?';
   String _stringHour = 'HH';
   String _stringMin = 'MM';
   String _stringSec = 'SS';
@@ -17,11 +17,14 @@ class VmTimerView extends ChangeNotifier {
   int _hours = 0;
   int _minutes = 0;
   int _seconds = 0;
+  int _remainingSeconds = 0;
   double _percentageTime = 0;
   bool _rest = false;
   bool _over = false;
   bool _timeTraining = true;
-  bool _trainingCountdown = true;
+  bool _trainingCountdown = false;
+  bool _goingOn = false;
+  bool _stop = false;
 
   set _setCurrentSerie(int currentSerie) {
     _currentSerie = currentSerie;
@@ -33,6 +36,7 @@ class VmTimerView extends ChangeNotifier {
   double get getPercentageTime => _percentageTime;
   bool get getRest => _rest;
   bool get getOver => _over;
+  bool get getGoingOn => _goingOn;
 
   void _playSound(String soundName) {
     final assetPath = soundName;
@@ -98,6 +102,8 @@ class VmTimerView extends ChangeNotifier {
     for (int currentSeconds = totalSeconds;
         currentSeconds > 0;
         currentSeconds--) {
+      if (_stop) break;
+
       _putInRightUnities(currentSeconds);
 
       _hoursToString(_hours);
@@ -110,7 +116,6 @@ class VmTimerView extends ChangeNotifier {
       }
       _percentageTime = currentSeconds / totalSeconds;
       notifyListeners();
-      print(_visual);
 
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -125,10 +130,13 @@ class VmTimerView extends ChangeNotifier {
   }
 
   Future<void> _initialTimer() async {
+    _stop = false;
+    _rest = true;
     for (int countdown = 5; countdown > 0; countdown--) {
       _visual = countdown.toString();
       _playSound('countdown.wav');
       notifyListeners();
+      if (_stop) break;
 
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -136,20 +144,20 @@ class VmTimerView extends ChangeNotifier {
 
   Future<void> _initiateTraining() async {
     for (int serie = 1; serie <= _model.seriesNumber; serie++) {
+      if (_stop) break;
       _setCurrentSerie = serie;
       _playSound('ding_effect.wav');
       await _showExecVisual();
       _playSound('ding_effect.wav');
-      if (serie == _model.seriesNumber) {
-        break;
-      }
+      if (serie == _model.seriesNumber) break;
       await _showRestVisual();
     }
   }
 
   void _executeFinalChanges() {
-    _visual = 'Acabou';
+    _visual = 'FIM';
     _over = true;
+    _toogleRest();
     notifyListeners();
   }
 
@@ -157,5 +165,14 @@ class VmTimerView extends ChangeNotifier {
     await _initialTimer();
     await _initiateTraining();
     _executeFinalChanges();
+  }
+
+  void restart() async {
+    if (_rest) {
+    } else {}
+  }
+
+  void stopTimer() {
+    _stop = true;
   }
 }

@@ -14,15 +14,13 @@ class InitialView extends StatelessWidget {
   Widget build(BuildContext context) {
     const maxHourAndSeries = 99;
     const maxMinAndSec = 59;
-    const spaceBetween = 20.0;
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         actions: [
           IconButton(
-            icon: Icon(
-              Provider.of<ThemeModel>(context, listen: false).getIcon),
+            icon: Icon(Provider.of<ThemeModel>(context, listen: false).getIcon),
             onPressed:
                 Provider.of<ThemeModel>(context, listen: false).switchThemeMode,
           )
@@ -37,6 +35,7 @@ class InitialView extends StatelessWidget {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Text('Séries:'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -44,11 +43,15 @@ class InitialView extends StatelessWidget {
                           seriesConter: true,
                           value: viewModel.getSeriesNumber,
                           maxValue: maxHourAndSeries,
-                          onChanged: (series) => viewModel.setSeriesNumber = series,
+                          onChanged: (series) =>
+                              viewModel.setSeriesNumber = series,
                         )
                       ],
                     ),
-                    const SizedBox(height: 20.0,),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Text('Execução:'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -58,17 +61,11 @@ class InitialView extends StatelessWidget {
                           maxValue: maxHourAndSeries,
                           onChanged: (hours) => viewModel.setExecHour = hours,
                         ),
-                        const SizedBox(
-                          width: spaceBetween,
-                        ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getExecMin,
                           maxValue: maxMinAndSec,
                           onChanged: (mins) => viewModel.setExecMin = mins,
-                        ),
-                        const SizedBox(
-                          width: spaceBetween,
                         ),
                         OurNumberPicker(
                           seriesConter: false,
@@ -76,12 +73,12 @@ class InitialView extends StatelessWidget {
                           maxValue: maxMinAndSec,
                           onChanged: (secs) => viewModel.setExecSec = secs,
                         ),
-                        const SizedBox(
-                          width: spaceBetween,
-                        ),
                       ],
                     ),
-                    const SizedBox(height: 20.0,),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Text('Descanso:'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -91,26 +88,17 @@ class InitialView extends StatelessWidget {
                           maxValue: maxHourAndSeries,
                           onChanged: (hours) => viewModel.setRestHour = hours,
                         ),
-                        const SizedBox(
-                          width: spaceBetween,
-                        ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getRestMin,
                           maxValue: maxMinAndSec,
                           onChanged: (mins) => viewModel.setRestMin = mins,
                         ),
-                        const SizedBox(
-                          width: spaceBetween,
-                        ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getRestSec,
                           maxValue: maxMinAndSec,
                           onChanged: (secs) => viewModel.setRestSec = secs,
-                        ),
-                        const SizedBox(
-                          width: spaceBetween,
                         ),
                       ],
                     ),
@@ -122,8 +110,7 @@ class InitialView extends StatelessWidget {
           ),
           ElevatedButton(
               onPressed: () => viewModel.goToTimerView(context),
-              child: const Text('Botão')
-          ),
+              child: const Text('Próximo')),
         ],
       ),
     );

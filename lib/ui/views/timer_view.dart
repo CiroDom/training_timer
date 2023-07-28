@@ -8,67 +8,80 @@ class TimerView extends StatelessWidget {
   const TimerView({super.key, required this.viewModel});
 
   @override
+  void dispose() {}
+
+  @override
   Widget build(BuildContext context) {
     final lightThemeMode =
-        Provider.of<ThemeModel>(context, listen: false).getOurThemeMode == ThemeMode.light;
+        Provider.of<ThemeModel>(context, listen: false).getOurThemeMode ==
+            ThemeMode.light;
 
-    return Scaffold(
-      backgroundColor: lightThemeMode
-          ? viewModel.getRest
-              ? Colors.red
-              : Colors.green
-          : null,
-      appBar: AppBar(
-        elevation: 0.0,
-        actions: [
-          IconButton(
-            icon: Icon(Provider.of<ThemeModel>(context, listen: false).getIcon),
-            onPressed:
-                Provider.of<ThemeModel>(context, listen: false).switchThemeMode,
-          )
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AnimatedBuilder(
-              animation: viewModel,
-              builder: (context, child) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(viewModel.getSeries.toString()),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
+    return AnimatedBuilder(
+        animation: viewModel,
+        builder: (context, child) {
+          return WillPopScope(
+            onWillPop: () async {
+              viewModel.stopTimer();
+              return true;
+            },
+            child: Scaffold(
+              backgroundColor: lightThemeMode
+                  ? viewModel.getRest
+                      ? Colors.red
+                      : Colors.green
+                  : null,
+              appBar: AppBar(
+                elevation: 0.0,
+                actions: [
+                  IconButton(
+                    icon: Icon(Provider.of<ThemeModel>(context, listen: false)
+                        .getIcon),
+                    onPressed: Provider.of<ThemeModel>(context, listen: false)
+                        .switchThemeMode,
+                  )
+                ],
+              ),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(viewModel.getSeries.toString()),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Stack(alignment: Alignment.center, children: [
                           CircularProgressIndicator(
                             value: viewModel.getPercentageTime,
                             strokeWidth: 10,
-                            valueColor: AlwaysStoppedAnimation<MaterialColor?>(lightThemeMode ? null : viewModel.getRest ? Colors.red : Colors.green),
+                            valueColor: AlwaysStoppedAnimation<MaterialColor?>(
+                                lightThemeMode
+                                    ? null
+                                    : viewModel.getRest
+                                        ? Colors.red
+                                        : Colors.green),
                           ),
                           Text(viewModel.getVisual)
-                        ]
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      ElevatedButton(
-                        onPressed: viewModel.getOver ? null : viewModel.start,
-                        child: const Text('Acionar'),
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
+                        ]),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        ElevatedButton(
+                          onPressed: viewModel.getOver ? null : viewModel.start,
+                          child: const Text('Acionar'),
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              }),
-        ],
-      ),
-    );
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
