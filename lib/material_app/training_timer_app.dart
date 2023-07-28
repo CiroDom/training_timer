@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:training_timer/core/view_models/vm_initial_view.dart';
+import 'package:training_timer/ui/provider_models/theme_model.dart';
+import 'package:training_timer/ui/res/our_themes.dart';
 
 import '../ui/views/initial_view.dart';
 
@@ -9,12 +12,13 @@ class TrainingTimerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viemModel = VmInitialView();
+    ThemeMode ourThemeMode = Provider.of<ThemeModel>(context, listen: true).getOurThemeMode;
 
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      debugShowCheckedModeBanner: false,
+      themeMode: ourThemeMode,
+      theme: OurThemes.light,
+      darkTheme: OurThemes.dark,
       home: InitialView(viewModel: viemModel),
     );
   }

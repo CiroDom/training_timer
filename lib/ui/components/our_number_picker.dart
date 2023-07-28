@@ -17,15 +17,17 @@ class OurNumberPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NumberPicker(
-      axis: Axis.vertical,
-      itemWidth: 60,
-      itemHeight: 35,
-      itemCount: 3,
-      value: value,
-      minValue: seriesConter ? 1 : 0,
-      maxValue: maxValue,
-      onChanged: onChanged,
+    return Expanded(
+      child: NumberPicker(
+        axis: Axis.vertical,
+        itemWidth: 60,
+        itemHeight: 35,
+        itemCount: 3,
+        value: value,
+        minValue: seriesConter ? 1 : 0,
+        maxValue: maxValue,
+        onChanged: onChanged,
+      ),
     );
   }
 }
