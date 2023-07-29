@@ -14,6 +14,7 @@ class InitialView extends StatelessWidget {
   Widget build(BuildContext context) {
     const maxHourAndSeries = 99;
     const maxMinAndSec = 59;
+    final darkMode = Theme.of(context).brightness != Brightness.light;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +46,7 @@ class InitialView extends StatelessWidget {
                           maxValue: maxHourAndSeries,
                           onChanged: (series) =>
                               viewModel.setSeriesNumber = series,
+                          darkMode: darkMode,
                         )
                       ],
                     ),
@@ -60,18 +62,21 @@ class InitialView extends StatelessWidget {
                           value: viewModel.getExecHour,
                           maxValue: maxHourAndSeries,
                           onChanged: (hours) => viewModel.setExecHour = hours,
+                          darkMode: darkMode,
                         ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getExecMin,
                           maxValue: maxMinAndSec,
                           onChanged: (mins) => viewModel.setExecMin = mins,
+                          darkMode: darkMode,
                         ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getExecSec,
                           maxValue: maxMinAndSec,
                           onChanged: (secs) => viewModel.setExecSec = secs,
+                          darkMode: darkMode,
                         ),
                       ],
                     ),
@@ -87,18 +92,21 @@ class InitialView extends StatelessWidget {
                           value: viewModel.getRestHour,
                           maxValue: maxHourAndSeries,
                           onChanged: (hours) => viewModel.setRestHour = hours,
+                          darkMode: darkMode,
                         ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getRestMin,
                           maxValue: maxMinAndSec,
                           onChanged: (mins) => viewModel.setRestMin = mins,
+                          darkMode: darkMode,
                         ),
                         OurNumberPicker(
                           seriesConter: false,
                           value: viewModel.getRestSec,
                           maxValue: maxMinAndSec,
                           onChanged: (secs) => viewModel.setRestSec = secs,
+                          darkMode: darkMode,
                         ),
                       ],
                     ),

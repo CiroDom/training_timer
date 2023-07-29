@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:training_timer/core/view_models/vm_timer_view.dart';
 import 'package:training_timer/ui/provider_models/theme_model.dart';
+import 'package:training_timer/ui/res/our_colors.dart';
 
 class TimerView extends StatelessWidget {
   final VmTimerView viewModel;
@@ -12,9 +13,7 @@ class TimerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lightThemeMode =
-        Provider.of<ThemeModel>(context, listen: false).getOurThemeMode ==
-            ThemeMode.light;
+    final darkMode = Theme.of(context).brightness != Brightness.light;
 
     return AnimatedBuilder(
         animation: viewModel,
@@ -25,11 +24,11 @@ class TimerView extends StatelessWidget {
               return true;
             },
             child: Scaffold(
-              backgroundColor: lightThemeMode
-                  ? viewModel.getRest
-                      ? Colors.red
-                      : Colors.green
-                  : null,
+              backgroundColor: darkMode
+                  ? null
+                  : viewModel.getRest
+                      ? OurColors.stoppingActionL
+                      : OurColors.continueingActionL,
               appBar: AppBar(
                 elevation: 0.0,
                 actions: [
@@ -56,12 +55,15 @@ class TimerView extends StatelessWidget {
                           CircularProgressIndicator(
                             value: viewModel.getPercentageTime,
                             strokeWidth: 10,
-                            valueColor: AlwaysStoppedAnimation<MaterialColor?>(
-                                lightThemeMode
-                                    ? null
-                                    : viewModel.getRest
-                                        ? Colors.red
-                                        : Colors.green),
+                            backgroundColor: darkMode
+                                ? OurColors.secondBackgroundD
+                                : OurColors.secondBackgroundL,
+                            valueColor: AlwaysStoppedAnimation<Color?>(
+                                darkMode
+                                    ? viewModel.getRest
+                                        ? OurColors.stoppingActionD
+                                        : OurColors.continueingActionD
+                                    : null),
                           ),
                           Text(viewModel.getVisual)
                         ]),

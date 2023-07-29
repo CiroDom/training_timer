@@ -4,32 +4,33 @@ import 'package:training_timer/ui/res/our_colors.dart';
 class OurThemes {
   static final light = ThemeData(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: OurColors.backgroundLight,
-      appBarTheme: const AppBarTheme(backgroundColor: OurColors.pickerLight),
+      scaffoldBackgroundColor: OurColors.backgroundL,
+      appBarTheme: const AppBarTheme(backgroundColor: OurColors.pickerL),
       textTheme: const TextTheme(
           bodyMedium: TextStyle(
-              color: OurColors.textsLight,)),
+        color: OurColors.textsL,
+      )),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-              backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => OurColors.pickerLight),
+              backgroundColor:
+                  MaterialStateColor.resolveWith((states) => OurColors.pickerL),
               foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => OurColors.backgroundLight))));
+                  (states) => OurColors.backgroundL))));
 
   static final dark = ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: OurColors.backgroundDark,
+      scaffoldBackgroundColor: OurColors.backgroundD,
       appBarTheme:
-          const AppBarTheme(backgroundColor: OurColors.backgroundBarDark),
+          const AppBarTheme(backgroundColor: OurColors.secondBackgroundD),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(
-          color: OurColors.pickerDark,
+          color: OurColors.pickerD,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-              backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => OurColors.pickerDark),
+              backgroundColor:
+                  MaterialStateColor.resolveWith((states) => OurColors.pickerD),
               foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => OurColors.textsDark))));
+                  (states) => OurColors.textsD))));
 }
