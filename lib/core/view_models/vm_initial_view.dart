@@ -55,6 +55,30 @@ class VmInitialView extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<int> getGetterList() {
+    return[
+      getSeriesNumber,
+      getExecHour,
+      getExecMin,
+      getExecSec,
+      getRestHour,
+      getRestMin,
+      getRestSec,
+    ];
+  } 
+
+  List<void Function(int)> getSetterList() {
+    return[
+      (int serie) => setSeriesNumber = serie,
+      (int execHour) => setExecHour = execHour,
+      (int execMin) => setExecMin = execMin,
+      (int execSec) => setExecSec = execSec,
+      (int restHour) => setRestHour = restHour,
+      (int restMin) => setRestMin = restMin,
+      (int restSec) => setRestSec = restSec,
+    ];
+  } 
+
   Duration _createDuration(int hour, int min, int sec) =>
       Duration(hours: hour, minutes: min, seconds: sec);
 
