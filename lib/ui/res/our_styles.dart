@@ -11,11 +11,10 @@ class OurStyles {
   static const pickerMainLight = TextStyle(
       color: OurColors.pickerL, fontWeight: FontWeight.w400, fontSize: 24);
   static const pickerSmallLight = TextStyle(
-    color: OurColors.secondBackgroundL,
-    fontWeight: FontWeight.w400,
-    fontSize: 16,
-    fontFamily: _fontFamily
-  );
+      color: OurColors.secondBackgroundL,
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      fontFamily: _fontFamily);
 
   static const headerD = TextStyle(
     color: OurColors.textsL,
@@ -24,9 +23,14 @@ class OurStyles {
   static const pickerMainDark = TextStyle(
       color: OurColors.pickerD, fontWeight: FontWeight.w400, fontSize: 24);
   static const pickerSmallDark = TextStyle(
-    color: OurColors.secondBackgroundD,
-    fontWeight: FontWeight.w400,
-    fontSize: 16,
-    fontFamily: _fontFamily
+      color: OurColors.secondBackgroundD,
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      fontFamily: _fontFamily);
+
+  static const visual = TextStyle(
+    fontSize: 40.0,
+    fontWeight: FontWeight.bold,
+    fontFamily: _fontFamily,
   );
 }

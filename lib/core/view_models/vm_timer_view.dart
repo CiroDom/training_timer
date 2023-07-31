@@ -10,19 +10,16 @@ class VmTimerView extends ChangeNotifier {
   VmTimerView({required TimeTraining model}) : _model = model;
 
   String _visual = 'Vamos?';
-  String _stringHour = 'HH';
   String _stringMin = 'MM';
   String _stringSec = 'SS';
   int _currentSerie = 0;
-  int _hours = 0;
   int _minutes = 0;
   int _seconds = 0;
   int _remainingSeconds = 0;
   double _percentageTime = 0;
   bool _rest = false;
   bool _over = false;
-  bool _timeTraining = true;
-  bool _trainingCountdown = false;
+  bool _countdown = true;
   bool _goingOn = false;
   bool _stop = false;
 
@@ -32,10 +29,12 @@ class VmTimerView extends ChangeNotifier {
   }
 
   String get getVisual => _visual;
-  int get getSeries => _currentSerie;
+  int get getTotalSeries => _model.seriesNumber;
+  int get getcurrentSerie => _currentSerie;
   double get getPercentageTime => _percentageTime;
   bool get getRest => _rest;
   bool get getOver => _over;
+  bool get getCountdown => _countdown;
   bool get getGoingOn => _goingOn;
 
   void _playSound(String soundName) {
@@ -52,30 +51,12 @@ class VmTimerView extends ChangeNotifier {
   }
 
   void _putInRightUnities(int seconds) {
-    if (seconds >= 3600) {
-      _hours = seconds ~/ 3600;
-    }
-
-    if (_hours > 0) {
-      _minutes = (seconds % 3600) ~/ 60;
-    } else if (seconds >= 60) {
-      _minutes = seconds ~/ 60;
-    } else if (seconds < 60) {
-      _minutes = 0;
-    }
-
     if (seconds >= 60) {
+      _minutes = seconds ~/ 60;
       _seconds = (seconds % 60);
     } else {
+      _minutes = 0;
       _seconds = seconds;
-    }
-  }
-
-  void _hoursToString(int numberHour) {
-    if (numberHour < 10) {
-      _stringHour = '0$numberHour';
-    } else {
-      _stringHour = '$numberHour';
     }
   }
 
@@ -106,12 +87,11 @@ class VmTimerView extends ChangeNotifier {
 
       _putInRightUnities(currentSeconds);
 
-      _hoursToString(_hours);
       _minsToString(_minutes);
       _secsToString(_seconds);
 
-      _visual = '$_stringHour:$_stringMin:$_stringSec';
-      if (_timeTraining && _trainingCountdown && currentSeconds <= 5) {
+      _visual = '$_stringMin:$_stringSec';
+      if (currentSeconds <= 5) {
         _playSound('countdown.wav');
       }
       _percentageTime = currentSeconds / totalSeconds;
@@ -143,6 +123,7 @@ class VmTimerView extends ChangeNotifier {
   }
 
   Future<void> _initiateTraining() async {
+    _countdown = false;
     for (int serie = 1; serie <= _model.seriesNumber; serie++) {
       if (_stop) break;
       _setCurrentSerie = serie;

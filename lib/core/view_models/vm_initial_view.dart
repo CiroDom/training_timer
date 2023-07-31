@@ -5,28 +5,19 @@ import 'package:training_timer/ui/views/timer_view.dart';
 
 class VmInitialView extends ChangeNotifier {
   int _seriesNumber = 1;
-  int _execHour = 0;
   int _execMin = 0;
   int _execSec = 0;
-  int _restHour = 0;
   int _restMin = 0;
   int _restSec = 0;
 
   int get getSeriesNumber => _seriesNumber;
-  int get getExecHour => _execHour;
   int get getExecMin => _execMin;
   int get getExecSec => _execSec;
-  int get getRestHour => _restHour;
   int get getRestMin => _restMin;
   int get getRestSec => _restSec;
 
   set setSeriesNumber(int seriesNumber) {
     _seriesNumber = seriesNumber;
-    notifyListeners();
-  }
-
-  set setExecHour(int execHour) {
-    _execHour = execHour;
     notifyListeners();
   }
 
@@ -37,11 +28,6 @@ class VmInitialView extends ChangeNotifier {
 
   set setExecSec(int execSec) {
     _execSec = execSec;
-    notifyListeners();
-  }
-
-  set setRestHour(int restHour) {
-    _restHour = restHour;
     notifyListeners();
   }
 
@@ -58,10 +44,8 @@ class VmInitialView extends ChangeNotifier {
   List<int> getGetterList() {
     return[
       getSeriesNumber,
-      getExecHour,
       getExecMin,
       getExecSec,
-      getRestHour,
       getRestMin,
       getRestSec,
     ];
@@ -70,17 +54,15 @@ class VmInitialView extends ChangeNotifier {
   List<void Function(int)> getSetterList() {
     return[
       (int serie) => setSeriesNumber = serie,
-      (int execHour) => setExecHour = execHour,
       (int execMin) => setExecMin = execMin,
       (int execSec) => setExecSec = execSec,
-      (int restHour) => setRestHour = restHour,
       (int restMin) => setRestMin = restMin,
       (int restSec) => setRestSec = restSec,
     ];
   } 
 
-  Duration _createDuration(int hour, int min, int sec) =>
-      Duration(hours: hour, minutes: min, seconds: sec);
+  Duration _createDuration(int min, int sec) =>
+      Duration(minutes: min, seconds: sec);
 
   TimeTraining _createTrainingModel(
     int seriesNumber,
@@ -112,17 +94,17 @@ class VmInitialView extends ChangeNotifier {
   }
 
   void goToTimerView(BuildContext context) {
-    if (_execHour == 0 && _execMin == 0 && _execSec == 0) {
+    if (_execMin == 0 && _execSec == 0) {
       _invalidTimeFunction(context, 'Insira um tempo válido para a execução.');
       return;
     }
-    if (_restHour == 0 && _restMin == 0 && _restSec == 0) {
+    if (_restMin == 0 && _restSec == 0) {
       _invalidTimeFunction(context, 'Insira um tempo válido para o descanso.');
       return;
     }
 
-    final executionDuration = _createDuration(_execHour, _execMin, _execSec);
-    final restDuration = _createDuration(_restHour, _restMin, _restSec);
+    final executionDuration = _createDuration(_execMin, _execSec);
+    final restDuration = _createDuration(_restMin, _restSec);
     final viewModel =
         _createVmTimerView(_seriesNumber, executionDuration, restDuration);
 

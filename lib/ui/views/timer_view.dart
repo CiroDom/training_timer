@@ -3,13 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:training_timer/core/view_models/vm_timer_view.dart';
 import 'package:training_timer/ui/provider_models/theme_model.dart';
 import 'package:training_timer/ui/res/our_colors.dart';
+import 'package:training_timer/ui/res/our_styles.dart';
 
 class TimerView extends StatelessWidget {
   final VmTimerView viewModel;
   const TimerView({super.key, required this.viewModel});
-
-  @override
-  void dispose() {}
 
   @override
   Widget build(BuildContext context) {
@@ -40,45 +38,45 @@ class TimerView extends StatelessWidget {
                   )
                 ],
               ),
-              body: Column(
+              body: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(viewModel.getSeries.toString()),
-                        const SizedBox(
-                          height: 20.0,
-                        ),
-                        Stack(alignment: Alignment.center, children: [
-                          CircularProgressIndicator(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        viewModel.getCountdown
+                            ? ''
+                            : '${viewModel.getcurrentSerie.toString()} de ${viewModel.getTotalSeries}',
+                        style: OurStyles.visual,
+                      ),
+                      Stack(alignment: Alignment.center, children: [
+                        SizedBox(
+                          width: 216,
+                          height: 216,
+                          child: CircularProgressIndicator(
                             value: viewModel.getPercentageTime,
-                            strokeWidth: 10,
+                            strokeWidth: 16,
                             backgroundColor: darkMode
                                 ? OurColors.secondBackgroundD
                                 : OurColors.secondBackgroundL,
-                            valueColor: AlwaysStoppedAnimation<Color?>(
-                                darkMode
-                                    ? viewModel.getRest
-                                        ? OurColors.stoppingActionD
-                                        : OurColors.continueingActionD
-                                    : null),
+                            valueColor: AlwaysStoppedAnimation<Color?>(darkMode
+                                ? viewModel.getRest
+                                    ? OurColors.stoppingActionD
+                                    : OurColors.continueingActionD
+                                : null),
                           ),
-                          Text(viewModel.getVisual)
-                        ]),
-                        const SizedBox(
-                          height: 20.0,
                         ),
-                        ElevatedButton(
-                          onPressed: viewModel.getOver ? null : viewModel.start,
-                          child: const Text('Acionar'),
-                        ),
-                        const SizedBox(
-                          height: 20.0,
-                        ),
-                      ],
-                    ),
+                        Text(
+                          viewModel.getVisual,
+                          style: OurStyles.visual,
+                        )
+                      ]),
+                      ElevatedButton(
+                        onPressed: viewModel.getOver ? null : viewModel.start,
+                        child: const Text('Acionar'),
+                      ),
+                    ],
                   ),
                 ],
               ),
