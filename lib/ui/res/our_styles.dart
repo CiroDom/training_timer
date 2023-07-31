@@ -9,7 +9,9 @@ class OurStyles {
     fontFamily: _fontFamily,
   );
   static const pickerMainLight = TextStyle(
-      color: OurColors.pickerL, fontWeight: FontWeight.w400, fontSize: 24);
+      color: OurColors.pickerAndButtonsL,
+      fontWeight: FontWeight.w400,
+      fontSize: 24);
   static const pickerSmallLight = TextStyle(
       color: OurColors.secondBackgroundL,
       fontWeight: FontWeight.w400,
@@ -21,7 +23,9 @@ class OurStyles {
     fontFamily: _fontFamily,
   );
   static const pickerMainDark = TextStyle(
-      color: OurColors.pickerD, fontWeight: FontWeight.w400, fontSize: 24);
+      color: OurColors.pickerAndButtonsD,
+      fontWeight: FontWeight.w400,
+      fontSize: 24);
   static const pickerSmallDark = TextStyle(
       color: OurColors.secondBackgroundD,
       fontWeight: FontWeight.w400,

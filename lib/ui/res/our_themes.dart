@@ -5,17 +5,18 @@ class OurThemes {
   static final light = ThemeData(
       brightness: Brightness.light,
       scaffoldBackgroundColor: OurColors.backgroundL,
-      appBarTheme: const AppBarTheme(backgroundColor: OurColors.pickerL),
+      appBarTheme: const AppBarTheme(backgroundColor: OurColors.pickerAndButtonsL),
       textTheme: const TextTheme(
           bodyMedium: TextStyle(
         color: OurColors.textsL,
       )),
       elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateColor.resolveWith((states) => OurColors.pickerL),
-              foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => OurColors.backgroundL))));
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          backgroundColor: OurColors.pickerAndButtonsL
+        )
+      )
+  );
 
   static final dark = ThemeData(
       brightness: Brightness.dark,
@@ -24,13 +25,14 @@ class OurThemes {
           const AppBarTheme(backgroundColor: OurColors.secondBackgroundD),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(
-          color: OurColors.pickerD,
+          color: OurColors.pickerAndButtonsD,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateColor.resolveWith((states) => OurColors.pickerD),
-              foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => OurColors.textsD))));
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          backgroundColor: OurColors.pickerAndButtonsD
+        )
+      )
+  );
 }

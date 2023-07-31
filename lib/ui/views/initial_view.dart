@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:training_timer/core/classes/enum/time_train_picker_infos.dart';
 import 'package:training_timer/core/view_models/vm_initial_view.dart';
+import 'package:training_timer/ui/components/next_step_button.dart';
 import 'package:training_timer/ui/components/our_serie_picker.dart';
 import 'package:training_timer/ui/components/our_timer_pickers.dart';
 import '../provider_models/theme_model.dart';
@@ -43,9 +44,9 @@ class InitialView extends StatelessWidget {
                     timeTrainPickerInfos: TimeTrainPickerInfos.values,
                     getSetterList: viewModel.getSetterList(),
                     getGetterList: viewModel.getGetterList()),
-                ElevatedButton(
-                    onPressed: () => viewModel.goToTimerView(context),
-                    child: const Text('Próximo')),
+                NextStepButton(
+                  text: 'Próximo',
+                  onPressed: () => viewModel.goToTimerView(context)),
               ],
             ),
           );

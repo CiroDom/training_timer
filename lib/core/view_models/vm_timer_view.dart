@@ -21,7 +21,7 @@ class VmTimerView extends ChangeNotifier {
   bool _over = false;
   bool _countdown = true;
   bool _goingOn = false;
-  bool _stop = false;
+  bool _cancel = false;
 
   set _setCurrentSerie(int currentSerie) {
     _currentSerie = currentSerie;
@@ -83,7 +83,7 @@ class VmTimerView extends ChangeNotifier {
     for (int currentSeconds = totalSeconds;
         currentSeconds > 0;
         currentSeconds--) {
-      if (_stop) break;
+      if (_cancel) break;
 
       _putInRightUnities(currentSeconds);
 
@@ -110,13 +110,15 @@ class VmTimerView extends ChangeNotifier {
   }
 
   Future<void> _initialTimer() async {
-    _stop = false;
+    _goingOn = true;
+    print('$_goingOn');
+    _cancel = false;
     _rest = true;
     for (int countdown = 5; countdown > 0; countdown--) {
       _visual = countdown.toString();
       _playSound('countdown.wav');
       notifyListeners();
-      if (_stop) break;
+      if (_cancel) break;
 
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -125,7 +127,7 @@ class VmTimerView extends ChangeNotifier {
   Future<void> _initiateTraining() async {
     _countdown = false;
     for (int serie = 1; serie <= _model.seriesNumber; serie++) {
-      if (_stop) break;
+      if (_cancel) break;
       _setCurrentSerie = serie;
       _playSound('ding_effect.wav');
       await _showExecVisual();
@@ -154,6 +156,6 @@ class VmTimerView extends ChangeNotifier {
   }
 
   void stopTimer() {
-    _stop = true;
+    _cancel = true;
   }
 }
