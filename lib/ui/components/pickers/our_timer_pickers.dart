@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/classes/models/time_training.dart';
 
-import '../../core/classes/enum/time_train_picker_infos.dart';
+import '../../../core/classes/enum/time_train_picker_infos.dart';
 import 'our_number_picker.dart';
 
 class OurTimerPickers extends StatelessWidget {

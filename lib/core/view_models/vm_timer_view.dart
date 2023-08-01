@@ -20,8 +20,9 @@ class VmTimerView extends ChangeNotifier {
   bool _rest = false;
   bool _over = false;
   bool _countdown = true;
-  bool _goingOn = false;
-  bool _cancel = false;
+  bool _initiated = false;
+  bool _paused = false;
+  bool _canceled = false;
 
   set _setCurrentSerie(int currentSerie) {
     _currentSerie = currentSerie;
@@ -35,7 +36,8 @@ class VmTimerView extends ChangeNotifier {
   bool get getRest => _rest;
   bool get getOver => _over;
   bool get getCountdown => _countdown;
-  bool get getGoingOn => _goingOn;
+  bool get getInitiated => _initiated;
+  bool get getGoingOn => _paused;
 
   void _playSound(String soundName) {
     final assetPath = soundName;
@@ -47,6 +49,11 @@ class VmTimerView extends ChangeNotifier {
 
   void _toogleRest() {
     _rest = !_rest;
+    notifyListeners();
+  }
+
+  void _tooglePaused() {
+    _paused = !_paused;
     notifyListeners();
   }
 
@@ -83,7 +90,7 @@ class VmTimerView extends ChangeNotifier {
     for (int currentSeconds = totalSeconds;
         currentSeconds > 0;
         currentSeconds--) {
-      if (_cancel) break;
+      if (_canceled) break;
 
       _putInRightUnities(currentSeconds);
 
@@ -110,15 +117,14 @@ class VmTimerView extends ChangeNotifier {
   }
 
   Future<void> _initialTimer() async {
-    _goingOn = true;
-    print('$_goingOn');
-    _cancel = false;
+    _initiated = true;
+    _canceled = false;
     _rest = true;
     for (int countdown = 5; countdown > 0; countdown--) {
       _visual = countdown.toString();
       _playSound('countdown.wav');
       notifyListeners();
-      if (_cancel) break;
+      if (_canceled) break;
 
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -127,7 +133,7 @@ class VmTimerView extends ChangeNotifier {
   Future<void> _initiateTraining() async {
     _countdown = false;
     for (int serie = 1; serie <= _model.seriesNumber; serie++) {
-      if (_cancel) break;
+      if (_canceled) break;
       _setCurrentSerie = serie;
       _playSound('ding_effect.wav');
       await _showExecVisual();
@@ -150,12 +156,11 @@ class VmTimerView extends ChangeNotifier {
     _executeFinalChanges();
   }
 
-  void restart() async {
-    if (_rest) {
-    } else {}
+  void playOrPause() async {
+    _tooglePaused();
   }
 
   void stopTimer() {
-    _cancel = true;
+    _canceled = true;
   }
 }

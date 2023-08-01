@@ -5,34 +5,33 @@ class OurThemes {
   static final light = ThemeData(
       brightness: Brightness.light,
       scaffoldBackgroundColor: OurColors.backgroundL,
-      appBarTheme: const AppBarTheme(backgroundColor: OurColors.pickerAndButtonsL),
+      appBarTheme:
+          const AppBarTheme(backgroundColor: OurColors.pickerAndButtonsL),
       textTheme: const TextTheme(
           bodyMedium: TextStyle(
         color: OurColors.textsL,
       )),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          backgroundColor: OurColors.pickerAndButtonsL
-        )
-      )
-  );
+          style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              backgroundColor: OurColors.pickerAndButtonsL)));
 
   static final dark = ThemeData(
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: OurColors.backgroundD,
-      appBarTheme:
-          const AppBarTheme(backgroundColor: OurColors.secondBackgroundD),
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(
-          color: OurColors.pickerAndButtonsD,
-        ),
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: OurColors.backgroundD,
+    appBarTheme:
+        const AppBarTheme(backgroundColor: OurColors.divisorAndShadowNumberD),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(
+        color: OurColors.pickerAndButtonsD,
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          backgroundColor: OurColors.pickerAndButtonsD
-        )
-      )
+            elevation: 2.0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            backgroundColor: OurColors.pickerAndButtonsD)),
   );
 }

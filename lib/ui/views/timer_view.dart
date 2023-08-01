@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:training_timer/core/view_models/vm_timer_view.dart';
-import 'package:training_timer/ui/components/next_step_button.dart';
+import 'package:training_timer/ui/components/buttons/play_pause_row.dart';
 import 'package:training_timer/ui/provider_models/theme_model.dart';
 import 'package:training_timer/ui/res/our_colors.dart';
 import 'package:training_timer/ui/res/our_styles.dart';
+
+import '../components/buttons/next_step_button.dart';
 
 class TimerView extends StatelessWidget {
   final VmTimerView viewModel;
@@ -59,8 +61,8 @@ class TimerView extends StatelessWidget {
                             value: viewModel.getPercentageTime,
                             strokeWidth: darkMode ? 8 : 24,
                             backgroundColor: darkMode
-                                ? OurColors.secondBackgroundD
-                                : OurColors.secondBackgroundL,
+                                ? OurColors.divisorAndShadowNumberD
+                                : OurColors.divisorAndShadowNumberL,
                             valueColor: AlwaysStoppedAnimation<Color?>(darkMode
                                 ? viewModel.getRest
                                     ? OurColors.stoppingActionD
@@ -73,12 +75,14 @@ class TimerView extends StatelessWidget {
                           style: OurStyles.visual,
                         )
                       ]),
-                      NextStepButton(
-                        text: 'Começar',
-                        onPressed: viewModel.getGoingOn
-                            ? null
-                            : viewModel.start,
-                      ),
+                      viewModel.getInitiated
+                          ? PlayPauseRow(
+                              playOrPause: viewModel.playOrPause,
+                              goingOn: viewModel.getGoingOn)
+                          : NextStepButton(
+                              text: 'Começar',
+                              onPressed: viewModel.start,
+                            )
                     ],
                   ),
                 ],

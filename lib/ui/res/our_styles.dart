@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:training_timer/ui/res/our_colors.dart';
 
 class OurStyles {
-  static const _fontFamily = 'Nunito';
+  static const _fontFamily = 'Montserrat';
 
   static const headerL = TextStyle(
     color: OurColors.textsL,
@@ -13,7 +13,7 @@ class OurStyles {
       fontWeight: FontWeight.w400,
       fontSize: 24);
   static const pickerSmallLight = TextStyle(
-      color: OurColors.secondBackgroundL,
+      color: OurColors.divisorAndShadowNumberL,
       fontWeight: FontWeight.w400,
       fontSize: 16,
       fontFamily: _fontFamily);
@@ -27,7 +27,7 @@ class OurStyles {
       fontWeight: FontWeight.w400,
       fontSize: 24);
   static const pickerSmallDark = TextStyle(
-      color: OurColors.secondBackgroundD,
+      color: OurColors.divisorAndShadowNumberD,
       fontWeight: FontWeight.w400,
       fontSize: 16,
       fontFamily: _fontFamily);
