@@ -34,19 +34,22 @@ class InitialView extends StatelessWidget {
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                OurSeriePicker(darkMode: darkMode,
-                  minValue: TimeTrainPickerInfos.values[0].minValue,
-                  maxValue: TimeTrainPickerInfos.values[0].maxValue,
-                  value: viewModel.getSeriesNumber,
-                  setter: viewModel.getSetterList()[0]),
+                OurSeriePicker(
+                    darkMode: darkMode,
+                    minValue: TimeTrainPickerInfos.values[0].minValue,
+                    maxValue: TimeTrainPickerInfos.values[0].maxValue,
+                    value: viewModel.getSeriesNumber,
+                    setter: viewModel.getSetterList()[0],
+                    doubleTapFunc: viewModel.getAddNumberList()[0]),
                 OurTimerPickers(
                     darkMode: darkMode,
                     timeTrainPickerInfos: TimeTrainPickerInfos.values,
                     getSetterList: viewModel.getSetterList(),
-                    getGetterList: viewModel.getGetterList()),
+                    getGetterList: viewModel.getGetterList(),
+                    doubleTapFunc: viewModel.getAddNumberList(),),
                 NextStepButton(
-                  text: 'Próximo',
-                  onPressed: () => viewModel.goToTimerView(context)),
+                    text: 'Próximo',
+                    onPressed: () => viewModel.goToTimerView(context)),
               ],
             ),
           );

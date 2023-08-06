@@ -9,12 +9,13 @@ class OurTimerPickers extends StatelessWidget {
       required this.darkMode,
       required this.timeTrainPickerInfos,
       required this.getSetterList,
-      required this.getGetterList});
+      required this.getGetterList, required this.doubleTapFunc});
 
   final bool darkMode;
   final List<TimeTrainPickerInfos> timeTrainPickerInfos;
   final List<int> getGetterList;
   final List<void Function(int)> getSetterList;
+  final List<VoidCallback> doubleTapFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +28,16 @@ class OurTimerPickers extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: List.generate(2, (index) {
             final i = index + 1;
-            return OurNumberPicker(
-              darkMode: darkMode,
-              minValue: timeTrainPickerInfos[i].minValue,
-              maxValue: timeTrainPickerInfos[i].maxValue,
-              unity: timeTrainPickerInfos[i].unity,
-              value: getGetterList[i],
-              onChanged: (value) => getSetterList[i](value),
+            return Expanded(
+              child: OurNumberPicker(
+                    darkMode: darkMode,
+                    minValue: timeTrainPickerInfos[i].minValue,
+                    maxValue: timeTrainPickerInfos[i].maxValue,
+                    unity: timeTrainPickerInfos[i].unity,
+                    value: getGetterList[i],
+                    onChanged: (value) => getSetterList[i](value),
+                    doubleTapFunc: doubleTapFunc[i],
+                  )
             );
           }),
         ),
@@ -42,15 +46,18 @@ class OurTimerPickers extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: List.generate(2, (index) {
-            final i = index + 3;
             final j = index + 1;
-            return OurNumberPicker(
-              darkMode: darkMode,
-              minValue: TimeTrainPickerInfos.values[j].minValue,
-              maxValue: TimeTrainPickerInfos.values[j].maxValue,
-              unity: TimeTrainPickerInfos.values[j].unity,
-              value: getGetterList[i],
-              onChanged: (value) => getSetterList[i](value),
+            final i = index + 3;
+            return Expanded(
+              child: OurNumberPicker(
+                darkMode: darkMode,
+                minValue: TimeTrainPickerInfos.values[j].minValue,
+                maxValue: TimeTrainPickerInfos.values[j].maxValue,
+                unity: TimeTrainPickerInfos.values[j].unity,
+                value: getGetterList[i],
+                onChanged: (value) => getSetterList[i](value),
+                doubleTapFunc: doubleTapFunc[i],
+              )
             );
           }),
         )

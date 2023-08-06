@@ -75,13 +75,11 @@ class TimerView extends StatelessWidget {
                           style: OurStyles.visual,
                         )
                       ]),
-                      viewModel.getInitiated
-                          ? PlayPauseRow(
-                              playOrPause: viewModel.playOrPause,
-                              goingOn: viewModel.getGoingOn)
-                          : NextStepButton(
+                      NextStepButton(
                               text: 'Começar',
-                              onPressed: viewModel.start,
+                              onPressed: viewModel.getInitiated
+                                  ? null
+                                  : viewModel.start,
                             )
                     ],
                   ),

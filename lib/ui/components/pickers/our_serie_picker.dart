@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'our_number_picker.dart';
 
 class OurSeriePicker extends StatelessWidget {
-  const OurSeriePicker({super.key, required this.darkMode, required this.minValue, required this.maxValue, required this.value, required this.setter});
+  const OurSeriePicker({super.key, required this.darkMode, required this.minValue, required this.maxValue, required this.value, required this.setter, required this.doubleTapFunc});
 
   final bool darkMode;
   final int minValue;
   final int maxValue;
   final int value;
   final void Function(int) setter;
+  final VoidCallback doubleTapFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class OurSeriePicker extends StatelessWidget {
               value: value,
               unity: null,
               onChanged: (value) => setter(value),
+              doubleTapFunc: doubleTapFunc,
             )
           ],
         )

@@ -22,7 +22,7 @@ class VmTimerView extends ChangeNotifier {
   bool _countdown = true;
   bool _initiated = false;
   bool _paused = false;
-  bool _canceled = false;
+  bool _canceledTimer = false;
 
   set _setCurrentSerie(int currentSerie) {
     _currentSerie = currentSerie;
@@ -49,11 +49,6 @@ class VmTimerView extends ChangeNotifier {
 
   void _toogleRest() {
     _rest = !_rest;
-    notifyListeners();
-  }
-
-  void _tooglePaused() {
-    _paused = !_paused;
     notifyListeners();
   }
 
@@ -90,7 +85,7 @@ class VmTimerView extends ChangeNotifier {
     for (int currentSeconds = totalSeconds;
         currentSeconds > 0;
         currentSeconds--) {
-      if (_canceled) break;
+      if (_canceledTimer) break;
 
       _putInRightUnities(currentSeconds);
 
@@ -118,13 +113,13 @@ class VmTimerView extends ChangeNotifier {
 
   Future<void> _initialTimer() async {
     _initiated = true;
-    _canceled = false;
+    _canceledTimer = false;
     _rest = true;
     for (int countdown = 5; countdown > 0; countdown--) {
       _visual = countdown.toString();
       _playSound('countdown.wav');
       notifyListeners();
-      if (_canceled) break;
+      if (_canceledTimer) break;
 
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -133,7 +128,7 @@ class VmTimerView extends ChangeNotifier {
   Future<void> _initiateTraining() async {
     _countdown = false;
     for (int serie = 1; serie <= _model.seriesNumber; serie++) {
-      if (_canceled) break;
+      if (_canceledTimer) break;
       _setCurrentSerie = serie;
       _playSound('ding_effect.wav');
       await _showExecVisual();
@@ -156,11 +151,13 @@ class VmTimerView extends ChangeNotifier {
     _executeFinalChanges();
   }
 
-  void playOrPause() async {
-    _tooglePaused();
+  void pause() async {
+    _paused = true;
+    _canceledTimer = true;
+    notifyListeners();
   }
 
   void stopTimer() {
-    _canceled = true;
+    _canceledTimer = true;
   }
 }

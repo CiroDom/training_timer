@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:training_timer/ui/res/our_styles.dart';
 
@@ -10,6 +11,7 @@ class OurNumberPicker extends StatelessWidget {
     required this.maxValue,
     required this.unity,
     required this.onChanged,
+    required this.doubleTapFunc,
     required this.darkMode,
   });
 
@@ -18,15 +20,20 @@ class OurNumberPicker extends StatelessWidget {
   final int maxValue;
   final String? unity;
   final void Function(int) onChanged;
+  final VoidCallback doubleTapFunc;
   final bool darkMode;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          NumberPicker(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onDoubleTap: () {
+            doubleTapFunc();
+            HapticFeedback.lightImpact();
+          },
+          child: NumberPicker(
             selectedTextStyle:
                 darkMode ? OurStyles.pickerMainDark : OurStyles.pickerMainLight,
             textStyle: darkMode
@@ -41,11 +48,9 @@ class OurNumberPicker extends StatelessWidget {
             maxValue: maxValue,
             onChanged: onChanged,
           ),
-          unity == null
-              ? const SizedBox()
-              : Text(unity!),
-        ],
-      ),
+        ),
+        unity == null ? const SizedBox() : Text(unity!),
+      ],
     );
   }
 }

@@ -42,24 +42,63 @@ class VmInitialView extends ChangeNotifier {
   }
 
   List<int> getGetterList() {
-    return[
+    return [
       getSeriesNumber,
       getExecMin,
       getExecSec,
       getRestMin,
       getRestSec,
     ];
-  } 
+  }
 
   List<void Function(int)> getSetterList() {
-    return[
+    return [
       (int serie) => setSeriesNumber = serie,
       (int execMin) => setExecMin = execMin,
       (int execSec) => setExecSec = execSec,
       (int restMin) => setRestMin = restMin,
       (int restSec) => setRestSec = restSec,
     ];
-  } 
+  }
+
+  List<VoidCallback> getAddNumberList() {
+    return [
+      () {
+        if (_seriesNumber + 1 < 99) {
+          _seriesNumber = _seriesNumber + 1;
+        }
+        notifyListeners();
+      },
+      () {
+        if (_execMin + 1 < 60) {
+          _execMin = _execMin + 1;
+        }
+        notifyListeners();
+      },
+      () {
+        if (_execSec + 10 < 60) {
+          _execSec = _execSec + 10;
+        } else {
+          _execSec = 59;
+        }
+        notifyListeners();
+      },
+      () {
+        if (_restMin + 1 < 60) {
+          _restMin = _restMin + 1;
+        }
+        notifyListeners();
+      },
+      () {
+        if (_restSec + 10 < 60) {
+          _restSec = _restSec + 10;
+        } else {
+          _restSec = 59;
+        }
+        notifyListeners();
+      },
+    ];
+  }
 
   Duration _createDuration(int min, int sec) =>
       Duration(minutes: min, seconds: sec);
