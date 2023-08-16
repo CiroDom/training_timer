@@ -21,7 +21,7 @@ class TimerView extends StatelessWidget {
         builder: (context, child) {
           return WillPopScope(
             onWillPop: () async {
-              viewModel.stopTimer();
+              viewModel.totalCancel();
               return true;
             },
             child: Scaffold(
@@ -59,7 +59,7 @@ class TimerView extends StatelessWidget {
                           height: 216,
                           child: CircularProgressIndicator(
                             value: viewModel.getPercentageTime,
-                            strokeWidth: darkMode ? 8 : 24,
+                            strokeWidth: 24,
                             backgroundColor: darkMode
                                 ? OurColors.divisorAndShadowNumberD
                                 : OurColors.divisorAndShadowNumberL,
@@ -75,12 +75,22 @@ class TimerView extends StatelessWidget {
                           style: OurStyles.visual,
                         )
                       ]),
-                      NextStepButton(
-                              text: 'Começar',
-                              onPressed: viewModel.getInitiated
-                                  ? null
-                                  : viewModel.start,
-                            )
+                      
+                      viewModel.getOver
+                          ? NextStepButton(
+                            text: 'Voltar',
+                            onPressed: () => viewModel.goBack(context))
+                          : viewModel.getCountdown
+                              ? NextStepButton(
+                                  text: 'Começar',
+                                  onPressed: viewModel.getInitiated
+                                      ? null
+                                      : viewModel.start,
+                                )
+                              : PlayPauseRow(
+                                  play: viewModel.continueTraining,
+                                  pause: viewModel.pause,
+                                  paused: viewModel.getPaused),
                     ],
                   ),
                 ],

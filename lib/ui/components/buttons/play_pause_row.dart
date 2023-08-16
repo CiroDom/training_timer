@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class PlayPauseRow extends StatelessWidget {
   const PlayPauseRow(
       {super.key,
-      required this.playOrPause,
-      required this.goingOn});
+      required this.play,
+      required this.pause,
+      required this.paused});
 
-  final bool goingOn;
-  final VoidCallback playOrPause;
+  final bool paused;
+  final VoidCallback play;
+  final VoidCallback pause;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class PlayPauseRow extends StatelessWidget {
           height: buttonHeight,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(shape: shape),
-              onPressed: goingOn ? null : playOrPause,
+              onPressed: paused ? play : null,
               child: const Icon(Icons.play_arrow)),
         ),
         const SizedBox(
@@ -34,7 +36,7 @@ class PlayPauseRow extends StatelessWidget {
           height: buttonHeight,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(shape: shape),
-              onPressed: goingOn ? playOrPause : null,
+              onPressed: paused ? null : pause,
               child: const Icon(Icons.pause)),
         ),
       ],
