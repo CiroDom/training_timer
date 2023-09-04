@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:training_timer/core/view_models/vm_timer_view.dart';
+import 'package:training_timer/core/presenters/pres_timer_train.dart';
 import 'package:training_timer/ui/components/buttons/play_pause_row.dart';
 import 'package:training_timer/ui/provider_models/theme_model.dart';
 import 'package:training_timer/ui/res/our_colors.dart';
 import 'package:training_timer/ui/res/our_styles.dart';
 
-import '../components/buttons/next_step_button.dart';
+import '../../components/buttons/next_step_button.dart';
 
 class TimerView extends StatelessWidget {
   final VmTimerView viewModel;

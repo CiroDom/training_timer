@@ -87,7 +87,7 @@ class VmTimerView extends ChangeNotifier {
       _secsToString(_seconds);
 
       _visual = '$_stringMin:$_stringSec';
-      if (currentSeconds <= 5) {
+      if (currentSeconds <= _model.countdown) {
         _playSound(countdownSoundPath);
       }
       _percentageTime = currentSeconds / restOrExecTotalSecs;

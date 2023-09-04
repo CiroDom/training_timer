@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:training_timer/core/classes/models/time_training.dart';
-import 'package:training_timer/core/view_models/vm_timer_view.dart';
-import 'package:training_timer/ui/views/timer_view.dart';
+import 'package:training_timer/core/presenters/pres_timer_train.dart';
 
-class VmInitialView extends ChangeNotifier {
+import '../../ui/views/complete_views/time_view.dart';
+
+class PresInitialView extends ChangeNotifier {
   int _seriesNumber = 1;
   int _execMin = 0;
   int _execSec = 0;

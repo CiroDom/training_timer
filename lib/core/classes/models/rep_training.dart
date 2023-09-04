@@ -1,6 +1,13 @@
-
 class RepTraining {
-  RepTraining({required this.extra});
+  const RepTraining( 
+      {int howManyCountdown = 5,
+      required this.seriesNumber,
+      required this.restDuration,
+      required this.extraRest})
+      : countdown = howManyCountdown;
 
-  final Duration extra;
+  final int seriesNumber;
+  final int countdown;
+  final Duration restDuration;
+  final Duration extraRest;
 }
