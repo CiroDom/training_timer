@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:training_timer/core/presenters/pres_timer_train.dart';
-import 'package:training_timer/ui/components/buttons/play_pause_row.dart';
-import 'package:training_timer/ui/provider_models/theme_model.dart';
-import 'package:training_timer/ui/res/our_colors.dart';
-import 'package:training_timer/ui/res/our_styles.dart';
 
+import '../../../core/view_models/training_vms/timer_training_vms/vm_time_timer.dart';
 import '../../components/buttons/next_step_button.dart';
+import '../../components/buttons/play_pause_row.dart';
+import '../../provider_models/theme_model.dart';
+import '../../res/our_colors.dart';
+import '../../res/our_styles.dart';
 
-class TimerView extends StatelessWidget {
-  final VmTimerView viewModel;
-  const TimerView({super.key, required this.viewModel});
+class ViewTime extends StatelessWidget {
+  final VmTimerTime viewModel;
+  const ViewTime({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +75,10 @@ class TimerView extends StatelessWidget {
                           style: OurStyles.visual,
                         )
                       ]),
-                      
                       viewModel.getOver
                           ? NextStepButton(
-                            text: 'Voltar',
-                            onPressed: () => viewModel.goBack(context))
+                              text: 'Voltar',
+                              onPressed: () => viewModel.goBack(context))
                           : viewModel.getCountdown
                               ? NextStepButton(
                                   text: 'Começar',

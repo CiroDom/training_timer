@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/classes/models/time_training.dart';
 
-class VmTimerView extends ChangeNotifier {
-  final TimeTraining _model;
+import '../../../classes/models/timer_training.dart';
 
-  VmTimerView({required TimeTraining model}) : _model = model;
+class VmTimerTime extends ChangeNotifier {
+  TimerTraining _model;
+
+  VmTimerTime({required TimerTraining model}) : _model = model;
 
   String _visual = 'Vamos?';
   String _stringMin = 'MM';

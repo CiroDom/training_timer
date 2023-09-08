@@ -1,10 +1,10 @@
-class TimeTraining {
+class TimerTraining {
   final int seriesNumber;
   final int countdown;
   final Duration executionDuration;
   final Duration restDuration;
 
-  const TimeTraining(
+  const TimerTraining(
       {int howManyCountdown = 5,
       required this.seriesNumber,
       required this.executionDuration,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/ui/res/our_colors.dart';
+
+import 'our_colors.dart';
 
 class OurThemes {
   static final light = ThemeData(

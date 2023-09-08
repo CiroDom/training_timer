@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:training_timer/ui/res/our_styles.dart';
+
+import '../../res/our_styles.dart';
 
 class OurNumberPicker extends StatelessWidget {
   const OurNumberPicker({

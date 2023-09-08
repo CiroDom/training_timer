@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/classes/models/time_training.dart';
-import 'package:training_timer/core/presenters/pres_timer_train.dart';
+import 'package:training_timer/core/view_models/training_vms/timer_training_vms/vm_time_timer.dart';
 
-import '../../ui/views/complete_views/time_view.dart';
+import '../../../../ui/views/non_training_views/view_time.dart';
+import '../../../classes/models/timer_training.dart';
 
-class PresInitialView extends ChangeNotifier {
+class VmEditTimer extends ChangeNotifier {
   int _seriesNumber = 1;
   int _execMin = 0;
   int _execSec = 0;
@@ -104,17 +104,17 @@ class PresInitialView extends ChangeNotifier {
   Duration _createDuration(int min, int sec) =>
       Duration(minutes: min, seconds: sec);
 
-  TimeTraining _createTrainingModel(
+  TimerTraining _createTrainingModel(
     int seriesNumber,
     Duration executionDuration,
     Duration restDuration,
   ) =>
-      TimeTraining(
+      TimerTraining(
           seriesNumber: seriesNumber,
           executionDuration: executionDuration,
           restDuration: restDuration);
 
-  VmTimerView _createVmTimerView(
+  VmTimerTime _createVmTimerView(
     int seriesNumber,
     Duration executionDuration,
     Duration restDuration,
@@ -122,10 +122,10 @@ class PresInitialView extends ChangeNotifier {
     final model =
         _createTrainingModel(seriesNumber, executionDuration, restDuration);
 
-    return VmTimerView(model: model);
+    return VmTimerTime(model: model);
   }
 
-  void _invalidTimeFunction(BuildContext context, String msg) {
+  void _invalidTimeWarning(BuildContext context, String msg) {
     final snackBar = SnackBar(
       content: Text(msg),
       duration: const Duration(milliseconds: 700),
@@ -135,11 +135,11 @@ class PresInitialView extends ChangeNotifier {
 
   void goToTimerView(BuildContext context) {
     if (_execMin == 0 && _execSec == 0) {
-      _invalidTimeFunction(context, 'Insira um tempo válido para a execução.');
+      _invalidTimeWarning(context, 'Insira um tempo válido para a execução.');
       return;
     }
     if (_restMin == 0 && _restSec == 0) {
-      _invalidTimeFunction(context, 'Insira um tempo válido para o descanso.');
+      _invalidTimeWarning(context, 'Insira um tempo válido para o descanso.');
       return;
     }
 
@@ -149,7 +149,7 @@ class PresInitialView extends ChangeNotifier {
         _createVmTimerView(_seriesNumber, executionDuration, restDuration);
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => TimerView(viewModel: viewModel),
+      builder: (context) => ViewTime(viewModel: viewModel),
     ));
   }
 }
