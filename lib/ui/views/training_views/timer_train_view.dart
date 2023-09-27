@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/classes/enum/time_train_picker_infos.dart';
+import '../../../core/enums/time_train_picker_infos.dart';
 import '../../../core/view_models/training_vms/timer_training_vms/vm_edit_timer.dart';
 import '../../components/buttons/next_step_button.dart';
 import '../../components/pickers/our_serie_picker.dart';

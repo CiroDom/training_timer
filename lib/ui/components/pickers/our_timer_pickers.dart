@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/classes/enum/time_train_picker_infos.dart';
+import '../../../core/enums/time_train_picker_infos.dart';
 import 'our_number_picker.dart';
 
 class OurTimerPickers extends StatelessWidget {
@@ -51,9 +51,9 @@ class OurTimerPickers extends StatelessWidget {
             return Expanded(
               child: OurNumberPicker(
                 darkMode: darkMode,
-                minValue: TimeTrainPickerInfos.values[j].minValue,
-                maxValue: TimeTrainPickerInfos.values[j].maxValue,
-                unity: TimeTrainPickerInfos.values[j].unity,
+                minValue: timeTrainPickerInfos[j].minValue,
+                maxValue: timeTrainPickerInfos[j].maxValue,
+                unity: timeTrainPickerInfos[j].unity,
                 value: getGetterList[i],
                 onChanged: (value) => getSetterList[i](value),
                 doubleTapFunc: doubleTapFunc[i],

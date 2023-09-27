@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/view_models/training_vms/timer_training_vms/vm_time_timer.dart';
 
-import '../../../../ui/views/non_training_views/view_time.dart';
-import '../../../classes/models/timer_training.dart';
+import '../../../../ui/views/non_training_views/time_view.dart';
+import '../../../models/time_training.dart';
+import 'vm_time_timer.dart';
 
 class VmEditTimer extends ChangeNotifier {
   int _seriesNumber = 1;

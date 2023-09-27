@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:training_timer/core/view_models/interfaces/time_view_vm.dart';
 
-import '../../../classes/models/timer_training.dart';
+import '../../../models/time_training.dart';
 
-class VmTimerTime extends ChangeNotifier {
+class VmTimerTime extends ChangeNotifier implements VmTime {
   TimerTraining _model;
 
   VmTimerTime({required TimerTraining model}) : _model = model;
 
-  String _visual = 'Vamos?';
-  String _stringMin = 'MM';
-  String _stringSec = 'SS';
+  String _timerMsg = 'Vamos?';
   int _currentSerie = 0;
   int _minutes = 0;
   int _seconds = 0;
@@ -27,7 +26,22 @@ class VmTimerTime extends ChangeNotifier {
   final dingSoundPath = 'ding_effect.wav';
   final countdownSoundPath = 'countdown.wav';
 
-  String get getVisual => _visual;
+  String get getStringSec {
+    if (_seconds < 10) {
+      return '0$_seconds';
+    } else {
+      return '$_seconds';
+    }
+  }
+
+  String get getStringMin {
+    if (_minutes < 10) {
+      return '0$_minutes';
+    } else {
+      return '$_minutes';
+    }
+  }
+
   int get getTotalSeries => _model.seriesNumber;
   int get getcurrentSerie => _currentSerie;
   double get getPercentageTime => _percentageTime;
@@ -55,107 +69,35 @@ class VmTimerTime extends ChangeNotifier {
     }
   }
 
-  void _minsToString(int numberMin) {
-    if (numberMin < 10) {
-      _stringMin = '0$numberMin';
-    } else {
-      _stringMin = '$numberMin';
-    }
-  }
-
-  void _secsToString(int numberSec) {
-    if (numberSec < 10) {
-      _stringSec = '0$numberSec';
-    } else {
-      _stringSec = '$numberSec';
-    }
-  }
-
-  Future<void> _changeVisual(Duration duration) async {
-    final totalSeconds = duration.inSeconds;
-    final execDur = _model.executionDuration.inSeconds;
-    final restDur = _model.restDuration.inSeconds;
-    final restOrExecTotalSecs = _rest ? restDur : execDur;
-
-    for (int currentSeconds = totalSeconds;
-        currentSeconds > 0;
-        currentSeconds--) {
-      if (_canceledTimer) break;
-
+  void _goTimer(int durationInSecs) async {
+    int currentSeconds = durationInSecs;
+    Timer.periodic(Duration(seconds: 1), (timer) {
       _putInRightUnities(currentSeconds);
+      print(currentSeconds);
 
-      _minsToString(_minutes);
-      _secsToString(_seconds);
-
-      _visual = '$_stringMin:$_stringSec';
-      if (currentSeconds <= _model.countdown) {
-        _playSound(countdownSoundPath);
-      }
-      _percentageTime = currentSeconds / restOrExecTotalSecs;
+      currentSeconds--;
       notifyListeners();
-
-      await Future.delayed(const Duration(seconds: 1));
-    }
-  }
-
-  Future<void> _showExecVisual() async {
-    _rest = false;
-    await _changeVisual(_model.executionDuration);
-    if (!_canceledTimer) {
-      _rest = true;
-      notifyListeners();
-    }
-  }
-
-  Future<void> _showRestVisual() async {
-    _rest = true;
-    await _changeVisual(_model.restDuration);
-    if (!_canceledTimer) {
-      _rest = false;
-      notifyListeners();
-    }
+      if (currentSeconds <= 5) _playSound(countdownSoundPath);
+      if (_canceledTimer || currentSeconds <= 0) timer.cancel();
+    });
   }
 
   Future<void> _initialTimer() async {
-    _initiated = true;
-    _canceledTimer = false;
-    _rest = true;
-    for (int countdown = 5; countdown > 0; countdown--) {
-      _visual = countdown.toString();
-      _playSound(countdownSoundPath);
-      notifyListeners();
-      if (_canceledTimer) break;
-
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    // _initiated = true;
+    // _canceledTimer = false;
+    // _rest = true;
+    int countdown = 5;
+    _goTimer(countdown);
+    // _initiateTraining();
   }
 
   Future<void> _initiateTraining() async {
-    _countdown = false;
-    for (int serie = 1; serie <= _model.seriesNumber; serie++) {
-      if (_canceledTimer) break;
-      _currentSerie = serie;
-      if (!_canceledTimer) _playSound(dingSoundPath);
-      await _showExecVisual();
-      if (!_canceledTimer) _playSound(dingSoundPath);
-      if (serie == _model.seriesNumber) break;
-      await _showRestVisual();
-    }
+    final anyTime = 30;
+    _goTimer(anyTime);
   }
 
-  void _executeFinalChanges() {
-    _visual = 'FIM';
-    _percentageTime = 0;
-    _over = true;
-    _rest = true;
-    notifyListeners();
-  }
-
-  void start() async {
-    await _initialTimer();
-    await _initiateTraining();
-    if (_paused && _canceledTimer) return;
-    _executeFinalChanges();
+  void start() {
+    _initialTimer();
   }
 
   void pause() async {
@@ -163,30 +105,6 @@ class VmTimerTime extends ChangeNotifier {
     _canceledTimer = true;
 
     notifyListeners();
-  }
-
-  Future<void> continueTraining() async {
-    _paused = false;
-    _canceledTimer = false;
-
-    final remainingDuration = Duration(minutes: _minutes, seconds: _seconds);
-    await _changeVisual(remainingDuration);
-
-    if (!_rest && _currentSerie == _model.seriesNumber) {
-      _executeFinalChanges();
-      return;
-    }
-
-    for (int serie = _currentSerie; serie <= _model.seriesNumber; serie++) {
-      if (_canceledTimer) break;
-      _currentSerie = serie;
-      _playSound(dingSoundPath);
-      await _showExecVisual();
-      _playSound(dingSoundPath);
-      if (serie == _model.seriesNumber) break;
-      await _showRestVisual();
-    }
-    _executeFinalChanges();
   }
 
   void totalCancel() {

@@ -71,7 +71,7 @@ class ViewTime extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          viewModel.getVisual,
+                          '${viewModel.getStringMin}:${viewModel.getStringSec}',
                           style: OurStyles.visual,
                         )
                       ]),
@@ -82,13 +82,11 @@ class ViewTime extends StatelessWidget {
                           : viewModel.getCountdown
                               ? NextStepButton(
                                   text: 'Começar',
-                                  onPressed: viewModel.getInitiated
-                                      ? null
-                                      : viewModel.start,
+                                  onPressed: viewModel.start,
                                 )
                               : PlayPauseRow(
-                                  play: viewModel.continueTraining,
-                                  pause: viewModel.pause,
+                                  play: (){},
+                                  pause: (){},
                                   paused: viewModel.getPaused),
                     ],
                   ),
