@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:training_timer/core/view_models/interfaces/time_view_vm.dart';
 
@@ -53,10 +52,8 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
 
   void _playSound(String soundName) {
     final assetPath = soundName;
-    final assetSource = AssetSource(assetPath);
-    final audioPlayer = AudioPlayer();
 
-    audioPlayer.play(assetSource);
+
   }
 
   void _putInRightUnities(int seconds) {
@@ -72,12 +69,12 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
   void _goTimer(int durationInSecs) async {
     int currentSeconds = durationInSecs;
     Timer.periodic(Duration(seconds: 1), (timer) {
+      if (currentSeconds <= 5) _playSound(countdownSoundPath);
       _putInRightUnities(currentSeconds);
-      print(currentSeconds);
 
       currentSeconds--;
       notifyListeners();
-      if (currentSeconds <= 5) _playSound(countdownSoundPath);
+
       if (_canceledTimer || currentSeconds <= 0) timer.cancel();
     });
   }
