@@ -8,10 +8,10 @@ import '../../components/pickers/our_serie_picker.dart';
 import '../../components/pickers/our_timer_pickers.dart';
 import '../../provider_models/theme_model.dart';
 
-class TimerTrainView extends StatelessWidget {
+class EditTimerTrainView extends StatelessWidget {
   final VmEditTimer viewModel;
 
-  const TimerTrainView({super.key, required this.viewModel});
+  const EditTimerTrainView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +52,8 @@ class TimerTrainView extends StatelessWidget {
                 NextStepButton(
                     text: 'Próximo',
                     onPressed: () => viewModel.goToTimerView(context)),
+                const SizedBox(height: 40,)
+                
               ],
             ),
           );

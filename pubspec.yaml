@@ -30,8 +30,8 @@ dependencies:
   numberpicker: ^2.1.2
   fluttertoast: ^8.2.2
   provider: ^6.0.5
-  just_audio: ^0.9.35
-  circular_countdown_timer: ^0.2.3
+  audioplayers: ^4.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +54,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - assets/
+    - assets/alarm/
+    - assets/countdown-voices/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

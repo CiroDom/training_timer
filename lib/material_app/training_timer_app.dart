@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../core/view_models/training_vms/timer_training_vms/vm_edit_timer.dart';
 import '../ui/provider_models/theme_model.dart';
 import '../ui/res/our_themes.dart';
-import '../ui/views/training_views/timer_train_view.dart';
+import '../ui/views/training_views/edit_timer_train_view.dart';
 
 class TrainingTimerApp extends StatelessWidget {
   const TrainingTimerApp({super.key});
@@ -20,7 +20,7 @@ class TrainingTimerApp extends StatelessWidget {
       themeMode: ourThemeMode,
       theme: OurThemes.light,
       darkTheme: OurThemes.dark,
-      home: TimerTrainView(viewModel: presenter),
+      home: EditTimerTrainView(viewModel: presenter),
     );
   }
 }

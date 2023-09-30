@@ -1,47 +1,46 @@
 import 'package:flutter/material.dart';
 
 import '../../../../ui/views/non_training_views/time_view.dart';
+import '../../../enums/countdown_voices.dart';
 import '../../../models/time_training.dart';
 import 'vm_time_timer.dart';
 
 class VmEditTimer extends ChangeNotifier {
+  // NON-FINAL PROPRIETIES
   int _seriesNumber = 1;
   int _execMin = 0;
   int _execSec = 0;
   int _restMin = 0;
   int _restSec = 0;
+  int _countdown = 5;
+  String _voiceFileName = CountdownVoices.values[2].fileName;
 
+  // FINAL PROPRIETIES
+  final List<bool> _listVoiceSelec = [
+    true,
+    false,
+    false,
+  ];
+
+  // GETTERS
   int get getSeriesNumber => _seriesNumber;
   int get getExecMin => _execMin;
   int get getExecSec => _execSec;
   int get getRestMin => _restMin;
   int get getRestSec => _restSec;
+  int get getCountdown => _countdown;
+  List<bool> get getListVoiceSelec => _listVoiceSelec;
+  
+  List<String> get getListVoiceFiles {
+    final List<String> list = [];
 
-  set setSeriesNumber(int seriesNumber) {
-    _seriesNumber = seriesNumber;
-    notifyListeners();
+    for (CountdownVoices voice in CountdownVoices.values) {
+      list.add(voice.fileName);
+    }
+
+    return list;
   }
-
-  set setExecMin(int execMin) {
-    _execMin = execMin;
-    notifyListeners();
-  }
-
-  set setExecSec(int execSec) {
-    _execSec = execSec;
-    notifyListeners();
-  }
-
-  set setRestMin(int restMin) {
-    _restMin = restMin;
-    notifyListeners();
-  }
-
-  set setRestSec(int restSec) {
-    _restSec = restSec;
-    notifyListeners();
-  }
-
+  
   List<int> getGetterList() {
     return [
       getSeriesNumber,
@@ -49,6 +48,7 @@ class VmEditTimer extends ChangeNotifier {
       getExecSec,
       getRestMin,
       getRestSec,
+      getCountdown,
     ];
   }
 
@@ -59,6 +59,7 @@ class VmEditTimer extends ChangeNotifier {
       (int execSec) => setExecSec = execSec,
       (int restMin) => setRestMin = restMin,
       (int restSec) => setRestSec = restSec,
+      (int countdown) => setCountdown = countdown,
     ];
   }
 
@@ -101,28 +102,73 @@ class VmEditTimer extends ChangeNotifier {
     ];
   }
 
+  // SETTERS
+  set setSeriesNumber(int seriesNumber) {
+    _seriesNumber = seriesNumber;
+    notifyListeners();
+  }
+
+  set setExecMin(int execMin) {
+    _execMin = execMin;
+    notifyListeners();
+  }
+
+  set setExecSec(int execSec) {
+    _execSec = execSec;
+    notifyListeners();
+  }
+
+  set setRestMin(int restMin) {
+    _restMin = restMin;
+    notifyListeners();
+  }
+
+  set setRestSec(int restSec) {
+    _restSec = restSec;
+    notifyListeners();
+  }
+
+  set setCountdown(int countdown) {
+    _countdown = countdown;
+    notifyListeners();
+  }
+
+  // METHODS
+  void selectVoice(int voiceIndex) {
+    for (int i = 0; i < CountdownVoices.values.length; i++) {
+      if (i == voiceIndex) {
+        _listVoiceSelec[i] = true;
+        _voiceFileName = CountdownVoices.values[i].fileName;
+      } else {
+        _listVoiceSelec[i] = false;
+      }
+    }
+  }
+
   Duration _createDuration(int min, int sec) =>
       Duration(minutes: min, seconds: sec);
 
-  TimerTraining _createTrainingModel(
+  TimerTraining _createModel(
     int seriesNumber,
     Duration executionDuration,
     Duration restDuration,
   ) =>
       TimerTraining(
-          seriesNumber: seriesNumber,
-          executionDuration: executionDuration,
-          restDuration: restDuration);
+        seriesNumber: seriesNumber,
+        executionDuration: executionDuration,
+        restDuration: restDuration,
+        countdownTimer: _countdown,
+        voiceCountdown: _voiceFileName,
+      );
 
-  VmTimerTime _createVmTimerView(
+  VmTimerTimeView _createViewModel(
     int seriesNumber,
     Duration executionDuration,
     Duration restDuration,
   ) {
-    final model =
-        _createTrainingModel(seriesNumber, executionDuration, restDuration);
+    final model = _createModel(seriesNumber, executionDuration, restDuration);
 
-    return VmTimerTime(model: model);
+    return VmTimerTimeView(model: model);
   }
 
   void _invalidTimeWarning(BuildContext context, String msg) {
@@ -146,10 +192,12 @@ class VmEditTimer extends ChangeNotifier {
     final executionDuration = _createDuration(_execMin, _execSec);
     final restDuration = _createDuration(_restMin, _restSec);
     final viewModel =
-        _createVmTimerView(_seriesNumber, executionDuration, restDuration);
+        _createViewModel(_seriesNumber, executionDuration, restDuration);
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ViewTime(viewModel: viewModel),
+      builder: (context) => TimeView(viewModel: viewModel),
     ));
   }
+
+  void goToConfig() {}
 }

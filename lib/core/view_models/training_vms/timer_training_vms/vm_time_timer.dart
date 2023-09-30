@@ -1,15 +1,17 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:training_timer/core/view_models/interfaces/time_view_vm.dart';
 
 import '../../../models/time_training.dart';
 
-class VmTimerTime extends ChangeNotifier implements VmTime {
-  TimerTraining _model;
+class VmTimerTimeView extends ChangeNotifier implements VmTime {
+  final TimerTraining _model;
 
-  VmTimerTime({required TimerTraining model}) : _model = model;
+  VmTimerTimeView({required TimerTraining model}) : _model = model;
 
+  // NON-FINAL PROPRIETIES
   String _timerMsg = 'Vamos?';
   int _currentSerie = 0;
   int _minutes = 0;
@@ -22,9 +24,11 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
   bool _paused = false;
   bool _canceledTimer = false;
 
-  final dingSoundPath = 'ding_effect.wav';
-  final countdownSoundPath = 'countdown.wav';
+  // FINAL PROPRIETIES
+  final _audioPlayer = AudioPlayer();
+  final _finalBeep5sec = 'beep-5sec.mp3';
 
+  // GETTERS
   String get getStringSec {
     if (_seconds < 10) {
       return '0$_seconds';
@@ -50,10 +54,14 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
   bool get getInitiated => _initiated;
   bool get getPaused => _paused;
 
-  void _playSound(String soundName) {
-    final assetPath = soundName;
+  // METHODS
+  void _playSound(bool isVoice, String soundName, int begin) {
+    final assetPath =
+        isVoice ? 'countdown-voices/$soundName' : 'alarm/$soundName';
 
+    final assetSource = AssetSource(assetPath);
 
+    _audioPlayer.play(assetSource, position: Duration(seconds: begin));
   }
 
   void _putInRightUnities(int seconds) {
@@ -66,16 +74,21 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
     }
   }
 
-  void _goTimer(int durationInSecs) async {
+  void _goTimer(int durationInSecs, int countdownBegin) async {
     int currentSeconds = durationInSecs;
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (currentSeconds <= 5) _playSound(countdownSoundPath);
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (currentSeconds == countdownBegin) {
+        _playSound(true, _model.voiceCountdown, countdownBegin);
+      }
+
+      if (_canceledTimer || currentSeconds <= 0) {
+        timer.cancel();
+      }
+
       _putInRightUnities(currentSeconds);
 
       currentSeconds--;
       notifyListeners();
-
-      if (_canceledTimer || currentSeconds <= 0) timer.cancel();
     });
   }
 
@@ -84,13 +97,13 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
     // _canceledTimer = false;
     // _rest = true;
     int countdown = 5;
-    _goTimer(countdown);
+    _goTimer(countdown, countdown);
     // _initiateTraining();
   }
 
   Future<void> _initiateTraining() async {
     final anyTime = 30;
-    _goTimer(anyTime);
+    _goTimer(anyTime, 5);
   }
 
   void start() {
@@ -107,6 +120,7 @@ class VmTimerTime extends ChangeNotifier implements VmTime {
   void totalCancel() {
     _paused = false;
     _canceledTimer = true;
+    _audioPlayer.stop;
     notifyListeners();
   }
 

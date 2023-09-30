@@ -10,7 +10,7 @@ class OurNumberPicker extends StatelessWidget {
     required this.value,
     required this.minValue,
     required this.maxValue,
-    required this.unity,
+    this.unity,
     required this.onChanged,
     required this.doubleTapFunc,
     required this.darkMode,

@@ -1,13 +1,15 @@
 class TimerTraining {
   final int seriesNumber;
-  final int countdown;
+  final int countdownTimer;
   final Duration executionDuration;
   final Duration restDuration;
+  final String voiceCountdown;
 
-  const TimerTraining(
-      {int howManyCountdown = 5,
-      required this.seriesNumber,
-      required this.executionDuration,
-      required this.restDuration})
-      : countdown = howManyCountdown;
+  const TimerTraining({
+    required this.countdownTimer,
+    required this.seriesNumber,
+    required this.executionDuration,
+    required this.restDuration,
+    required this.voiceCountdown,
+  });
 }

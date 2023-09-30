@@ -8,9 +8,9 @@ import '../../provider_models/theme_model.dart';
 import '../../res/our_colors.dart';
 import '../../res/our_styles.dart';
 
-class ViewTime extends StatelessWidget {
-  final VmTimerTime viewModel;
-  const ViewTime({super.key, required this.viewModel});
+class TimeView extends StatelessWidget {
+  final VmTimerTimeView viewModel;
+  const TimeView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +85,8 @@ class ViewTime extends StatelessWidget {
                                   onPressed: viewModel.start,
                                 )
                               : PlayPauseRow(
-                                  play: (){},
-                                  pause: (){},
+                                  play: () {},
+                                  pause: () {},
                                   paused: viewModel.getPaused),
                     ],
                   ),
