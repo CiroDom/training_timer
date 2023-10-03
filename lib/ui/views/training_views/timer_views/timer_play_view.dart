@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/view_models/training_vms/timer_training_vms/vm_time_timer.dart';
-import '../../components/buttons/next_step_button.dart';
-import '../../components/buttons/play_pause_row.dart';
-import '../../provider_models/theme_model.dart';
-import '../../res/our_colors.dart';
-import '../../res/our_styles.dart';
+import '../../../../core/view_models/training_vms/timer_training_vms/vm_timer_play_view.dart';
+import '../../../components/buttons/next_step_button.dart';
+import '../../../components/buttons/play_pause_row.dart';
+import '../../../provider_models/theme_model.dart';
+import '../../../res/our_colors.dart';
+import '../../../res/our_styles.dart';
 
-class TimeView extends StatelessWidget {
+class TimerPlayView extends StatelessWidget {
   final VmTimerTimeView viewModel;
-  const TimeView({super.key, required this.viewModel});
+  const TimerPlayView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +48,9 @@ class TimeView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        viewModel.getCountdown
-                            ? ''
-                            : '${viewModel.getcurrentSerie.toString()} de ${viewModel.getTotalSeries}',
+                        viewModel.getInitiated
+                            ? '${viewModel.getcurrentSerie.toString()} de ${viewModel.getTotalSeries}'
+                            : '',
                         style: OurStyles.visual,
                       ),
                       Stack(alignment: Alignment.center, children: [
@@ -71,7 +71,9 @@ class TimeView extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${viewModel.getStringMin}:${viewModel.getStringSec}',
+                          viewModel.getInitiated
+                              ? '${viewModel.getStringMin}:${viewModel.getStringSec}'
+                              : viewModel.getTimerMsg,
                           style: OurStyles.visual,
                         )
                       ]),
@@ -79,15 +81,15 @@ class TimeView extends StatelessWidget {
                           ? NextStepButton(
                               text: 'Voltar',
                               onPressed: () => viewModel.goBack(context))
-                          : viewModel.getCountdown
-                              ? NextStepButton(
-                                  text: 'Começar',
-                                  onPressed: viewModel.start,
-                                )
-                              : PlayPauseRow(
+                          : viewModel.getTraining
+                              ? PlayPauseRow(
                                   play: () {},
                                   pause: () {},
-                                  paused: viewModel.getPaused),
+                                  paused: viewModel.getPaused)
+                              : NextStepButton(
+                                  text: 'Começar',
+                                  onPressed: viewModel.start,
+                                ),
                     ],
                   ),
                 ],

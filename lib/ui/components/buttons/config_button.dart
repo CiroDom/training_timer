@@ -7,6 +7,8 @@ class ConfigButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: onPressed, icon: const Icon(Icons.settings));
+    return Center(
+      child: IconButton(onPressed: onPressed, icon: const Icon(Icons.settings)),
+    );
   }
 }

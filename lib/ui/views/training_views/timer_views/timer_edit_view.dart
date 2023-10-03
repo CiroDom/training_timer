@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:training_timer/ui/components/buttons/config_button.dart';
 
-import '../../../core/enums/time_train_picker_infos.dart';
-import '../../../core/view_models/training_vms/timer_training_vms/vm_edit_timer.dart';
-import '../../components/buttons/next_step_button.dart';
-import '../../components/pickers/our_serie_picker.dart';
-import '../../components/pickers/our_timer_pickers.dart';
-import '../../provider_models/theme_model.dart';
+import '../../../../core/enums/time_train_picker_infos.dart';
+import '../../../../core/view_models/training_vms/timer_training_vms/vm_timer_edit_view.dart';
+import '../../../components/buttons/next_step_button.dart';
+import '../../../components/pickers/our_serie_picker.dart';
+import '../../../components/pickers/our_timer_pickers.dart';
+import '../../../provider_models/theme_model.dart';
 
-class EditTimerTrainView extends StatelessWidget {
-  final VmEditTimer viewModel;
+class TimerEditView extends StatelessWidget {
+  final VmTimerEditView viewModel;
 
-  const EditTimerTrainView({super.key, required this.viewModel});
+  const TimerEditView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class EditTimerTrainView extends StatelessWidget {
                     minValue: TimeTrainPickerInfos.values[0].minValue,
                     maxValue: TimeTrainPickerInfos.values[0].maxValue,
                     value: viewModel.getSeriesNumber,
-                    setter: viewModel.getSetterList()[0],
+                    onChanged: viewModel.getSetterList()[0],
                     doubleTapFunc: viewModel.getAddNumberList()[0]),
                 OurTimerPickers(
                   darkMode: darkMode,
@@ -52,8 +53,11 @@ class EditTimerTrainView extends StatelessWidget {
                 NextStepButton(
                     text: 'Próximo',
                     onPressed: () => viewModel.goToTimerView(context)),
-                const SizedBox(height: 40,)
-                
+                const SizedBox(
+                  height: 24, // 1/2 da altura do NextStepButton
+                ),
+                ConfigButton(
+                    onPressed: () => viewModel.goToConfig(darkMode, context, viewModel)),
               ],
             ),
           );

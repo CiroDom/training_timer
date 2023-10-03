@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:training_timer/core/enums/countdown_alarms.dart';
+import 'package:training_timer/ui/components/others/our_dialog.dart';
 
-import '../../../../ui/views/non_training_views/time_view.dart';
+import '../../../../ui/views/training_views/timer_views/timer_play_view.dart';
 import '../../../enums/countdown_voices.dart';
 import '../../../models/time_training.dart';
-import 'vm_time_timer.dart';
+import 'vm_timer_play_view.dart';
 
-class VmEditTimer extends ChangeNotifier {
+class VmTimerEditView extends ChangeNotifier {
   // NON-FINAL PROPRIETIES
   int _seriesNumber = 1;
-  int _execMin = 0;
+  int _execMin = 1;
   int _execSec = 0;
-  int _restMin = 0;
+  int _restMin = 1;
   int _restSec = 0;
   int _countdown = 5;
-  String _voiceFileName = CountdownVoices.values[2].fileName;
-
-  // FINAL PROPRIETIES
-  final List<bool> _listVoiceSelec = [
-    true,
-    false,
-    false,
-  ];
+  String _voiceFileName = CountdownVoices.values[0].fileName;
+  String _alarmFileName = CountdownAlarms.values[0].fileName;
 
   // GETTERS
   int get getSeriesNumber => _seriesNumber;
@@ -29,8 +25,7 @@ class VmEditTimer extends ChangeNotifier {
   int get getRestMin => _restMin;
   int get getRestSec => _restSec;
   int get getCountdown => _countdown;
-  List<bool> get getListVoiceSelec => _listVoiceSelec;
-  
+
   List<String> get getListVoiceFiles {
     final List<String> list = [];
 
@@ -40,7 +35,67 @@ class VmEditTimer extends ChangeNotifier {
 
     return list;
   }
-  
+
+  List<String> get getListVoiceTitles {
+    final List<String> list = [];
+
+    for (CountdownVoices voice in CountdownVoices.values) {
+      list.add(voice.title);
+    }
+
+    return list;
+  }
+
+  List<bool> get getListVoiceSelec {
+    final List<bool> list = [];
+
+    for (CountdownVoices voice in CountdownVoices.values) {
+      final bool isTheVoiceSelected = voice.fileName == _voiceFileName;
+      if (isTheVoiceSelected) {
+        list.add(true);
+      } else {
+        list.add(false);
+      }
+    }
+
+    return list;
+  }
+
+  List<String> get getListAlarmFiles {
+    final List<String> list = [];
+
+    for (CountdownAlarms alarm in CountdownAlarms.values) {
+      list.add(alarm.fileName);
+    }
+
+    return list;
+  }
+
+  List<String> get getListAlarmTitles {
+    final List<String> list = [];
+
+    for (CountdownAlarms alarm in CountdownAlarms.values) {
+      list.add(alarm.title);
+    }
+
+    return list;
+  }
+
+  List<bool> get getListAlarmSelec {
+    final List<bool> list = [];
+
+    for (CountdownAlarms alarm in CountdownAlarms.values) {
+      final bool isTheAlarmSelected = alarm.fileName == _alarmFileName;
+      if (isTheAlarmSelected) {
+        list.add(true);
+      } else {
+        list.add(false);
+      }
+    }
+
+    return list;
+  }
+
   List<int> getGetterList() {
     return [
       getSeriesNumber,
@@ -135,14 +190,13 @@ class VmEditTimer extends ChangeNotifier {
 
   // METHODS
   void selectVoice(int voiceIndex) {
-    for (int i = 0; i < CountdownVoices.values.length; i++) {
-      if (i == voiceIndex) {
-        _listVoiceSelec[i] = true;
-        _voiceFileName = CountdownVoices.values[i].fileName;
-      } else {
-        _listVoiceSelec[i] = false;
-      }
-    }
+    _voiceFileName = CountdownVoices.values[voiceIndex].fileName;
+    notifyListeners();
+  }
+
+  void selectAlarm(int alarmIndex) {
+    _alarmFileName = CountdownAlarms.values[alarmIndex].fileName;
+    notifyListeners();
   }
 
   Duration _createDuration(int min, int sec) =>
@@ -154,12 +208,12 @@ class VmEditTimer extends ChangeNotifier {
     Duration restDuration,
   ) =>
       TimerTraining(
-        seriesNumber: seriesNumber,
-        executionDuration: executionDuration,
-        restDuration: restDuration,
-        countdownTimer: _countdown,
-        voiceCountdown: _voiceFileName,
-      );
+          seriesNumber: seriesNumber,
+          executionDuration: executionDuration,
+          restDuration: restDuration,
+          countdownTimer: _countdown,
+          voiceFileName: _voiceFileName,
+          alarmFileName: _alarmFileName);
 
   VmTimerTimeView _createViewModel(
     int seriesNumber,
@@ -195,9 +249,15 @@ class VmEditTimer extends ChangeNotifier {
         _createViewModel(_seriesNumber, executionDuration, restDuration);
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => TimeView(viewModel: viewModel),
+      builder: (context) => TimerPlayView(viewModel: viewModel),
     ));
   }
 
-  void goToConfig() {}
+  void goToConfig(
+      bool darkMode, BuildContext context, VmTimerEditView viewModel) {
+    showDialog(
+      context: context,
+      builder: (context) => OurDialog(viewModel: viewModel, darkMode: darkMode),
+    );
+  }
 }

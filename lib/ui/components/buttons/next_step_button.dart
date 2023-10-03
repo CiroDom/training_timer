@@ -10,7 +10,7 @@ class NextStepButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 184.0,
-      height: 48.0,
+      height: 60.0,
       child: ElevatedButton(
           onPressed: onPressed,
           child: Text(text)),
