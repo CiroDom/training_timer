@@ -48,7 +48,7 @@ class TimerPlayView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        viewModel.getInitiated
+                        viewModel.getTraining
                             ? '${viewModel.getcurrentSerie.toString()} de ${viewModel.getTotalSeries}'
                             : '',
                         style: OurStyles.visual,
@@ -71,7 +71,9 @@ class TimerPlayView extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          viewModel.getInitiated
+                          viewModel.getOver
+                          ? viewModel.getTimerMsg
+                          : viewModel.getInitiated
                               ? '${viewModel.getStringMin}:${viewModel.getStringSec}'
                               : viewModel.getTimerMsg,
                           style: OurStyles.visual,
