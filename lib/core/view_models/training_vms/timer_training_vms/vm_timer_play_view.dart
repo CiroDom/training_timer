@@ -75,8 +75,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _audioPlayer.play(assetSource, position: Duration(seconds: audioBegin));
   }
 
-  void _putInRightUnities(int millisecs) {
-    final seconds = Duration(milliseconds: millisecs).inSeconds;
+  void _putInRightUnities(int seconds) {
     if (seconds >= 60) {
       _minutes = seconds ~/ 60;
       _seconds = (seconds % 60);
@@ -89,11 +88,11 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   Future<void> _goTimer(int durationsInSecs, int countdownBegin) async {
     final completer = Completer();
     
-    int currentMilli = Duration(seconds: durationsInSecs).inMilliseconds;
+    int currentSecs = durationsInSecs;
 
-    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       final goCountdown =
-          Duration(milliseconds: currentMilli).inMilliseconds == Duration(seconds: countdownBegin).inMilliseconds;
+          currentSecs == countdownBegin;
       
       if (goCountdown) {
         _playSound(true, _model.voiceFileName, countdownBegin);
@@ -105,16 +104,16 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
         timer.cancel();
       }
 
-      if (currentMilli <= 0) {
+      if (currentSecs <= 0) {
         completer.complete();
         print('finalmente acabou');
         timer.cancel();
       }
 
-      _putInRightUnities(currentMilli);
+      _putInRightUnities(currentSecs);
       print('$_seconds');
 
-      currentMilli = currentMilli - 100;
+      currentSecs = currentSecs - 1;
       notifyListeners();
     });
 
