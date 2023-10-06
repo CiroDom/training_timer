@@ -25,11 +25,15 @@ class TimerPlayView extends StatelessWidget {
               return true;
             },
             child: Scaffold(
-              backgroundColor: darkMode
-                  ? null
-                  : viewModel.getRest
-                      ? OurColors.stoppingActionL
-                      : OurColors.continueingActionL,
+              backgroundColor: viewModel.getTraining
+                  ? darkMode
+                      ? null
+                      : viewModel.getRest
+                          ? OurColors.stoppingActionL
+                          : OurColors.continueingActionL
+                  : darkMode
+                    ? OurColors.backgroundD
+                    : OurColors.backgroundL,
               appBar: AppBar(
                 elevation: 0.0,
                 actions: [
@@ -68,7 +72,7 @@ class TimerPlayView extends StatelessWidget {
                                     ? OurColors.stoppingActionD
                                     : OurColors.continueingActionD
                                 : null),
-                          ),
+                          )
                         ),
                         Text(
                           viewModel.getOver
