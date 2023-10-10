@@ -76,7 +76,17 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _audioPlayer.play(assetSource, position: Duration(seconds: audioBegin));
   }
 
-  void _putInRightUnities(int seconds) {
+  int fromMilliToSec(int milli) {
+    if (milli / 1000 == Duration(milliseconds: milli).inSeconds) {
+      return Duration(milliseconds: milli).inSeconds;
+    } else {
+      return (Duration(milliseconds: milli).inSeconds + 1);
+    }
+  }
+
+  void _putInRightUnities(int milli) {
+    int seconds = fromMilliToSec(milli);
+
     if (seconds >= 60) {
       _minutes = seconds ~/ 60;
       _seconds = (seconds % 60);
@@ -86,13 +96,18 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     }
   }
 
-  Future<void> _goTimer(int durationsInSecs, int countdownBegin) async {
+  Future<void> _goTimer(
+      Duration duration, int countdownBegin, bool training, bool rest) async {
     final completer = Completer();
 
-    int currentSecs = durationsInSecs;
+    int currentMilli = duration.inMilliseconds;
 
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      final goCountdown = currentSecs == countdownBegin;
+    if (training) {
+      rest ? _rest = true : _rest = false;
+    }
+
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      final goCountdown = currentMilli / 1000 == countdownBegin;
 
       if (goCountdown) {
         _playSound(true, _model.voiceFileName, countdownBegin);
@@ -103,14 +118,15 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
         timer.cancel();
       }
 
-      if (currentSecs <= 0) {
+      if (currentMilli < 0) {
         completer.complete();
         timer.cancel();
       }
 
-      _putInRightUnities(currentSecs);
+      _putInRightUnities(currentMilli);
 
-      currentSecs = currentSecs - 1;
+      currentMilli = currentMilli - 100;
+
       notifyListeners();
     });
 
@@ -119,6 +135,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
 
   void _executeFinalChanges() {
     _timerMsg = 'FIM!';
+    _training = false;
     _over = true;
     _rest = true;
     _percentageTime = 0.0;
@@ -133,64 +150,91 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   Future<void> _initialTimer() async {
     _training = false;
     _initiated = true;
-    int countdown = _model.countdownTimer;
-    await _goTimer(
-      countdown,
-      countdown,
-    );
+    final countdownDur = Duration(seconds: _model.countdownTimer);
+    final countdownBegin = _model.countdownTimer;
+    await _goTimer(countdownDur, countdownBegin, false, false);
   }
 
   Future<void> _workout(int initialSerie, int finalSerie) async {
+    _training = true;
+
     for (int i = initialSerie; i <= finalSerie; i++) {
       _currentSerie = i;
 
       _rest = false;
-      await _goTimer(_model.executionDuration.inSeconds, _model.countdownTimer);
+      await _goTimer(
+          _model.executionDuration, _model.countdownTimer, true, false);
 
       _rest = true;
       if (_currentSerie == _model.seriesNumber) break;
-      await _goTimer(_model.restDuration.inSeconds, _model.countdownTimer);
+      await _goTimer(_model.restDuration, _model.countdownTimer, true, true);
     }
   }
 
-  int createRemainingDur() {
+  Duration createRemainingDur() {
     final remainingDur = Duration(minutes: _minutes, seconds: _seconds);
-    final remainDurInSecs = remainingDur.inSeconds;
 
-    return remainDurInSecs;
+    return remainingDur;
   }
 
-  Future<void> _ifItWasResting(bool wasResting, int remaingDurSecs,
-      int restDurSecs, int countdownTimer) async {
+  Future<void> _ifItWasResting(bool wasResting, Duration remaingDur,
+      Duration restDur, int countdownTimer) async {
     if (wasResting) {
-      if (remaingDurSecs < countdownTimer) {
-        await _goTimer(remaingDurSecs, remaingDurSecs);
+      if (remaingDur.inSeconds < countdownTimer) {
+        await _goTimer(
+          remaingDur,
+          remaingDur.inSeconds,
+          true,
+          true,
+        );
       } else {
-        await _goTimer(remaingDurSecs, countdownTimer);
+        await _goTimer(
+          remaingDur,
+          countdownTimer,
+          true,
+          true,
+        );
       }
     } else {
       _rest = false;
 
-      if (remaingDurSecs < _model.countdownTimer) {
-        await _goTimer(remaingDurSecs, remaingDurSecs);
-        _rest = true;
-        await _goTimer(remaingDurSecs, countdownTimer);
+      if (remaingDur.inSeconds < _model.countdownTimer) {
+        await _goTimer(
+          remaingDur,
+          remaingDur.inSeconds,
+          true,
+          false,
+        );
+        await _goTimer(
+          remaingDur,
+          countdownTimer,
+          true,
+          true,
+        );
       } else {
-        await _goTimer(remaingDurSecs, countdownTimer);
-        _rest = true;
-        await _goTimer(remaingDurSecs, countdownTimer);
+        await _goTimer(
+          remaingDur,
+          countdownTimer,
+          true,
+          false,
+        );
+        await _goTimer(
+          remaingDur,
+          countdownTimer,
+          true,
+          true,
+        );
       }
     }
   }
 
   Future<void> _playBrokenSerie() async {
     final remainDurInSecs = createRemainingDur();
-    final restDurInSecs = _model.restDuration.inSeconds;
+    final restDur = _model.restDuration;
     final countdownTimer = _model.countdownTimer;
     _canceledTimer = false;
 
-    _ifItWasResting(
-        _wasResting, remainDurInSecs, restDurInSecs, countdownTimer);
+    _ifItWasResting(_wasResting, remainDurInSecs, restDur, countdownTimer);
 
     _currentSerie++;
   }
