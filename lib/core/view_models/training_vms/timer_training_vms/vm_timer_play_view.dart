@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/enums/countdown_alarms.dart';
 import 'package:training_timer/core/view_models/interfaces/time_view_vm.dart';
 
 import '../../../models/time_training.dart';
@@ -17,7 +16,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   int _currentSerie = 0;
   int _minutes = 0;
   int _seconds = 0;
-  double _percentageTime = 0;
+  double _percentual = 0;
   bool _rest = true;
   bool _over = false;
   bool _initiated = false;
@@ -49,7 +48,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   String get getTimerMsg => _timerMsg;
   int get getTotalSeries => _model.seriesNumber;
   int get getcurrentSerie => _currentSerie;
-  double get getPercentageTime => _percentageTime;
+  double get getPercentageTime => _percentual;
   bool get getRest => _rest;
   bool get getOver => _over;
   bool get getInitiated => _initiated;
@@ -76,16 +75,20 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _audioPlayer.play(assetSource, position: Duration(seconds: audioBegin));
   }
 
-  int fromMilliToSec(int milli) {
+  int _fromMilliToSec(int milli) {
     if (milli / 1000 == Duration(milliseconds: milli).inSeconds) {
-      return Duration(milliseconds: milli).inSeconds;
+      final exactSec = Duration(milliseconds: milli).inSeconds;
+
+      return exactSec;
     } else {
-      return (Duration(milliseconds: milli).inSeconds + 1);
+      final roundedUpSec = (Duration(milliseconds: milli).inSeconds + 1);
+
+      return roundedUpSec;
     }
   }
 
   void _putInRightUnities(int milli) {
-    int seconds = fromMilliToSec(milli);
+    int seconds = _fromMilliToSec(milli);
 
     if (seconds >= 60) {
       _minutes = seconds ~/ 60;
@@ -96,11 +99,18 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     }
   }
 
+  void _putInPercentual(int somePercentual, int total) {
+    _percentual = somePercentual / total;
+  }
+
   Future<void> _goTimer(
       Duration duration, int countdownBegin, bool training, bool rest) async {
     final completer = Completer();
 
     int currentMilli = duration.inMilliseconds;
+
+    _putInRightUnities(currentMilli);
+    _putInPercentual(currentMilli, duration.inMilliseconds);
 
     if (training) {
       rest ? _rest = true : _rest = false;
@@ -118,12 +128,13 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
         timer.cancel();
       }
 
-      if (currentMilli < 0) {
+      if (currentMilli == 0) {
         completer.complete();
         timer.cancel();
       }
 
       _putInRightUnities(currentMilli);
+      _putInPercentual(currentMilli, duration.inMilliseconds);
 
       currentMilli = currentMilli - 100;
 
@@ -138,7 +149,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _training = false;
     _over = true;
     _rest = true;
-    _percentageTime = 0.0;
+    _percentual = 0.0;
 
     _playSound(
       false,
