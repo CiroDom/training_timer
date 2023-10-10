@@ -62,7 +62,9 @@ class TimerPlayView extends StatelessWidget {
                           width: 216,
                           height: 216,
                           child: CircularProgressIndicator(
-                            value: viewModel.getPercentageTime,
+                            value: viewModel.getTraining
+                              ? viewModel.getPercentageTime
+                              : 0.0,
                             strokeWidth: 24,
                             backgroundColor: darkMode
                                 ? OurColors.divisorAndShadowNumberD
@@ -89,12 +91,14 @@ class TimerPlayView extends StatelessWidget {
                               onPressed: () => viewModel.goBack(context))
                           : viewModel.getTraining
                               ? PlayPauseRow(
-                                  play: () {},
-                                  pause: () {},
+                                  play: viewModel.startAgain,
+                                  pause: viewModel.pause,
                                   paused: viewModel.getPaused)
                               : NextStepButton(
                                   text: 'Começar',
-                                  onPressed: viewModel.start,
+                                  onPressed: viewModel.getInitiated
+                                    ? null
+                                    : viewModel.start,
                                 ),
                     ],
                   ),

@@ -23,7 +23,6 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   bool _training = false;
   bool _paused = false;
   bool _canceledTimer = false;
-  bool _wasResting = false;
 
   // FINAL PROPRIETIES
   final _audioPlayer = AudioPlayer();
@@ -64,7 +63,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
 
     if (isVoice) {
       audioBegin = countdownBegin;
-      for (int i = 0; i <= 7; i++) {
+      for (int i = 0; i <= 10; i++) {
         if (i + countdownBegin == 10) {
           audioBegin = i;
           break;
@@ -128,7 +127,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
         timer.cancel();
       }
 
-      if (currentMilli == 0) {
+      if (currentMilli < 0 && currentMilli > -900) {
         completer.complete();
         timer.cancel();
       }
@@ -140,22 +139,22 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
 
       notifyListeners();
     });
-
     await completer.future;
   }
 
-  void _executeFinalChanges() {
-    _timerMsg = 'FIM!';
-    _training = false;
-    _over = true;
-    _rest = true;
-    _percentual = 0.0;
+  void _executeFinalChanges(bool over) {
+    if (over) {
+      _timerMsg = 'FIM!';
+      _training = false;
+      _percentual = 0.0;
 
-    _playSound(
-      false,
-      _model.alarmFileName,
-      0,
-    );
+      _playSound(
+        false,
+        _model.alarmFileName,
+        0,
+      );
+    } else
+      return;
   }
 
   Future<void> _initialTimer() async {
@@ -172,25 +171,28 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     for (int i = initialSerie; i <= finalSerie; i++) {
       _currentSerie = i;
 
-      _rest = false;
       await _goTimer(
           _model.executionDuration, _model.countdownTimer, true, false);
 
-      _rest = true;
-      if (_currentSerie == _model.seriesNumber) break;
+      if (_currentSerie == _model.seriesNumber) {
+        _over = true;
+        break;
+      }
       await _goTimer(_model.restDuration, _model.countdownTimer, true, true);
     }
+
+    _executeFinalChanges(_over);
   }
 
-  Duration createRemainingDur() {
+  Duration _createRemainingDur() {
     final remainingDur = Duration(minutes: _minutes, seconds: _seconds);
 
     return remainingDur;
   }
 
-  Future<void> _ifItWasResting(bool wasResting, Duration remaingDur,
+  Future<void> _restingIfAndElse(bool resting, Duration remaingDur,
       Duration restDur, int countdownTimer) async {
-    if (wasResting) {
+    if (resting) {
       if (remaingDur.inSeconds < countdownTimer) {
         await _goTimer(
           remaingDur,
@@ -207,63 +209,67 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
         );
       }
     } else {
-      _rest = false;
-
       if (remaingDur.inSeconds < _model.countdownTimer) {
-        await _goTimer(
-          remaingDur,
-          remaingDur.inSeconds,
-          true,
-          false,
-        );
-        await _goTimer(
-          remaingDur,
-          countdownTimer,
-          true,
-          true,
-        );
+        for (int i = 1; i == 1;) {
+          await _goTimer(
+            remaingDur,
+            remaingDur.inSeconds,
+            true,
+            false,
+          );
+          if (_canceledTimer) break;
+          await _goTimer(
+            remaingDur,
+            countdownTimer,
+            true,
+            true,
+          );
+        }
       } else {
-        await _goTimer(
-          remaingDur,
-          countdownTimer,
-          true,
-          false,
-        );
-        await _goTimer(
-          remaingDur,
-          countdownTimer,
-          true,
-          true,
-        );
+        for (int i = 1; i == 1;) {
+          await _goTimer(
+            remaingDur,
+            countdownTimer,
+            true,
+            false,
+          );
+          if (_canceledTimer) break;
+          await _goTimer(
+            remaingDur,
+            countdownTimer,
+            true,
+            true,
+          );
+        }
       }
     }
   }
 
   Future<void> _playBrokenSerie() async {
-    final remainDurInSecs = createRemainingDur();
+    final remainDurInSecs = _createRemainingDur();
     final restDur = _model.restDuration;
     final countdownTimer = _model.countdownTimer;
+    _paused = false;
     _canceledTimer = false;
 
-    _ifItWasResting(_wasResting, remainDurInSecs, restDur, countdownTimer);
-
-    _currentSerie++;
+    await _restingIfAndElse(_rest, remainDurInSecs, restDur, countdownTimer);
   }
 
   void start() async {
     await _initialTimer();
 
     await _workout(1, _model.seriesNumber);
-
-    _executeFinalChanges();
   }
 
   void startAgain() async {
     await _playBrokenSerie();
 
-    await _workout(_currentSerie, _model.seriesNumber);
-
-    _executeFinalChanges();
+    if (_currentSerie == _model.seriesNumber) {
+      _over = true;
+      _executeFinalChanges(_over);
+    } else {
+      await _workout(_currentSerie, _model.seriesNumber);
+    }
   }
 
   void pause() async {
