@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/enums/countdown_alarms.dart';
-import 'package:training_timer/core/enums/countdown_voices.dart';
-import 'package:training_timer/core/view_models/training_vms/timer_training_vms/vm_timer_edit_view.dart';
-import 'package:training_timer/ui/components/others/dialog_separator.dart';
+import 'package:workout_timers/ui/components/others/dialog_separator.dart';
 
+import '../../../core/view_models/training_vms/timer_training_vms/vm_timer_edit_view.dart';
 import '../pickers/our_number_picker.dart';
 
 class OurDialog extends StatelessWidget {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/ui/res/our_colors.dart';
+
+import '../../res/our_colors.dart';
 
 class DialogSeparator extends StatelessWidget {
   const DialogSeparator({super.key, required this.categName, required this.darkMode});

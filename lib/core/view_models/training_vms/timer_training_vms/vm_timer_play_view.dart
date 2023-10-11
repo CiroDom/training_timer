@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/view_models/interfaces/time_view_vm.dart';
+import 'package:workout_timers/core/view_models/interfaces/time_view_vm.dart';
 
 import '../../../models/time_training.dart';
 

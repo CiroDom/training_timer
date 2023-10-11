@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:training_timer/core/enums/countdown_alarms.dart';
-import 'package:training_timer/ui/components/others/our_dialog.dart';
+import 'package:workout_timers/core/enums/countdown_alarms.dart';
+import 'package:workout_timers/ui/components/others/our_dialog.dart';
 
 import '../../../../ui/views/training_views/timer_views/timer_play_view.dart';
 import '../../../enums/countdown_voices.dart';

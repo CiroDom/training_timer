@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:training_timer/ui/components/buttons/config_button.dart';
 
 import '../../../../core/enums/time_train_picker_infos.dart';
 import '../../../../core/view_models/training_vms/timer_training_vms/vm_timer_edit_view.dart';
+import '../../../components/buttons/config_button.dart';
 import '../../../components/buttons/next_step_button.dart';
 import '../../../components/pickers/our_serie_picker.dart';
 import '../../../components/pickers/our_timer_pickers.dart';

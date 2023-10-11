@@ -6,8 +6,8 @@ import '../ui/provider_models/theme_model.dart';
 import '../ui/res/our_themes.dart';
 import '../ui/views/training_views/timer_views/timer_edit_view.dart';
 
-class TrainingTimerApp extends StatelessWidget {
-  const TrainingTimerApp({super.key});
+class WorkoutTimersApp extends StatelessWidget {
+  const WorkoutTimersApp({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -8,12 +8,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:training_timer/material_app/training_timer_app.dart';
+import 'package:workout_timers/material_app/training_timer_app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const TrainingTimerApp());
+    await tester.pumpWidget(const WorkoutTimersApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
