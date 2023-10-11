@@ -11,9 +11,9 @@ class VmTimerEditView extends ChangeNotifier {
   // NON-FINAL PROPRIETIES
   int _seriesNumber = 1;
   int _execMin = 0;
-  int _execSec = 10;
+  int _execSec = 0;
   int _restMin = 0;
-  int _restSec = 10;
+  int _restSec = 0;
   int _countdown = 5;
   String _voiceFileName = CountdownVoices.values[0].fileName;
   String _alarmFileName = CountdownAlarms.values[0].fileName;

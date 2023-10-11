@@ -78,10 +78,12 @@ class TimerPlayView extends StatelessWidget {
                         ),
                         Text(
                           viewModel.getOver
-                          ? viewModel.getTimerMsg
-                          : viewModel.getInitiated
-                              ? '${viewModel.getStringMin}:${viewModel.getStringSec}'
-                              : viewModel.getTimerMsg,
+                              ? viewModel.getTimerMsg
+                              : viewModel.getInitiated
+                                  ? viewModel.getTraining
+                                      ? '${viewModel.getStringMin}:${viewModel.getStringSec}'
+                                      : '${viewModel.getSecCountdown}'
+                                  : viewModel.getTimerMsg,
                           style: OurStyles.visual,
                         )
                       ]),

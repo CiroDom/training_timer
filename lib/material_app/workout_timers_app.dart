@@ -21,6 +21,7 @@ class WorkoutTimersApp extends StatelessWidget {
       theme: OurThemes.light,
       darkTheme: OurThemes.dark,
       home: TimerEditView(viewModel: presenter),
+      title: 'Workout Timers',
     );
   }
 }
