@@ -16,6 +16,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   int _currentSerie = 0;
   int _minutes = 0;
   int _seconds = 0;
+  int _currentTotalDur = 0;
   double _percentual = 0;
   bool _rest = true;
   bool _over = false;
@@ -23,6 +24,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   bool _training = false;
   bool _paused = false;
   bool _canceledTimer = false;
+  bool _brokenSerie = false;
 
   // FINAL PROPRIETIES
   final _audioPlayer = AudioPlayer();
@@ -98,8 +100,14 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     }
   }
 
-  void _putInPercentual(int somePercentual, int total) {
-    _percentual = somePercentual / total;
+  void _putInPercentual(int somePercentual, int newTotal) {
+    if (_brokenSerie) {
+      _percentual = somePercentual / _currentTotalDur;
+    } else {
+      _currentTotalDur = newTotal;
+
+      _percentual = somePercentual / newTotal;
+    }
   }
 
   Future<void> _goTimer(
@@ -253,8 +261,11 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     final countdownTimer = _model.countdownTimer;
     _paused = false;
     _canceledTimer = false;
+    _brokenSerie = true;
 
     await _restingIfAndElse(_rest, remainDurInSecs, restDur, countdownTimer);
+
+    _brokenSerie = false;
   }
 
   void start() async {
