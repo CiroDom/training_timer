@@ -210,7 +210,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
       }
     } else {
       if (remaingDur.inSeconds < _model.countdownTimer) {
-        for (int i = 1; i == 1;) {
+        for (int i = 1; i == 1; i--) {
           await _goTimer(
             remaingDur,
             remaingDur.inSeconds,
@@ -218,6 +218,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
             false,
           );
           if (_canceledTimer) break;
+          if (_currentSerie == _model.seriesNumber) break;
           await _goTimer(
             remaingDur,
             countdownTimer,
@@ -234,6 +235,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
             false,
           );
           if (_canceledTimer) break;
+          if (_currentSerie == _model.seriesNumber) break;
           await _goTimer(
             remaingDur,
             countdownTimer,
