@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:workout_timers/core/view_models/interfaces/time_view_vm.dart';
 
 import '../../../models/time_training.dart';
@@ -26,6 +27,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   bool _paused = false;
   bool _canceledTimer = false;
   bool _brokenSerie = false;
+  Ticker? _ticker;
 
   // FINAL PROPRIETIES
   final _audioPlayer = AudioPlayer();
@@ -58,7 +60,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   bool get getTraining => _training;
   bool get getPaused => _paused;
 
-  // METHODS
+  // OTHER METHODS
   void _playSound(bool isVoice, String soundName, int countdownBegin) {
     final assetPath =
         isVoice ? 'countdown-voices/$soundName' : 'alarm/$soundName';
@@ -125,30 +127,31 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
       rest ? _rest = true : _rest = false;
     }
 
-    Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      final goCountdown = _currentMilli / 1000 == countdownBegin;
+    _ticker = Ticker((elapsed) {
+      _currentMilli = duration.inMilliseconds - elapsed.inMilliseconds;
 
-      if (goCountdown) {
+      _putInRightUnities(_currentMilli);
+      _putInPercentual(_currentMilli, duration.inMilliseconds);
+
+      notifyListeners();
+
+      if ((duration - elapsed).inSeconds == countdownBegin) {
         _playSound(true, _model.voiceFileName, countdownBegin);
       }
 
       if (_canceledTimer) {
         _audioPlayer.stop();
-        timer.cancel();
+        _ticker?.dispose();
       }
 
-      if (_currentMilli < 0 && _currentMilli > -900) {
+      if (elapsed.inSeconds == duration.inSeconds) {
         completer.complete();
-        timer.cancel();
+        _ticker?.dispose();
       }
-
-      _putInRightUnities(_currentMilli);
-      _putInPercentual(_currentMilli, duration.inMilliseconds);
-
-      _currentMilli = _currentMilli - 100;
-
-      notifyListeners();
     });
+
+    _ticker?.start();
+
     await completer.future;
   }
 
@@ -203,10 +206,11 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   Future<void> _restingIfAndElse(bool resting, Duration remaingDur,
       Duration restDur, int countdownTimer) async {
     final lastSerie = _currentSerie == _model.seriesNumber;
-    final lessThanCount =
-        (remaingDur.inMilliseconds < _model.countdownTimer * 1000);
+    final lessThanCount = (remaingDur.inSeconds < _model.countdownTimer);
 
     if (resting) {
+      _brokenSerie = true;
+
       if (lessThanCount) {
         for (int i = 1; i == 1; i--) {
           await _goTimer(
@@ -228,15 +232,20 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
           if (_canceledTimer) break;
         }
       }
+
+      _brokenSerie = false;
     } else {
       if (lessThanCount) {
         for (int i = 1; i == 1; i--) {
+          _brokenSerie = true;
+
           await _goTimer(
             remaingDur,
             remaingDur.inSeconds,
             true,
             false,
           );
+          _brokenSerie = false;
           if (_canceledTimer) break;
           if (lastSerie) break;
           await _goTimer(
@@ -249,12 +258,15 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
         }
       } else {
         for (int i = 1; i == 1; i--) {
+          _brokenSerie = true;
+
           await _goTimer(
             remaingDur,
             countdownTimer,
             true,
             false,
           );
+          _brokenSerie = false;
           if (_canceledTimer) break;
           if (lastSerie) break;
           await _goTimer(
@@ -278,8 +290,6 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _brokenSerie = true;
 
     await _restingIfAndElse(_rest, remainDur, restDur, countdownTimer);
-
-    _brokenSerie = false;
   }
 
   void start() async {
@@ -311,6 +321,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _paused = false;
     _canceledTimer = true;
     _audioPlayer.stop;
+    _ticker?.dispose;
     notifyListeners();
   }
 

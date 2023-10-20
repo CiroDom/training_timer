@@ -238,18 +238,19 @@ class VmTimerEditView extends ChangeNotifier {
       _invalidTimeWarning(context, 'Insira um tempo válido para a execução.');
       return;
     }
-    if (_restMin == 0 && _restSec == 0) {
+    if (_restMin == 0 && _restSec == 0 && _seriesNumber > 1) {
       _invalidTimeWarning(context, 'Insira um tempo válido para o descanso.');
       return;
     }
 
     final executionDuration = _createDuration(_execMin, _execSec);
     final restDuration = _createDuration(_restMin, _restSec);
-    final viewModel =
-        _createViewModel(_seriesNumber, executionDuration, restDuration);
+    final viewModel =_createViewModel(
+          _seriesNumber, executionDuration, restDuration);
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => TimerPlayView(viewModel: viewModel),
+      builder: (context) => TimerPlayView(
+        viewModel: viewModel),
     ));
   }
 
