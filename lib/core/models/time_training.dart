@@ -4,7 +4,6 @@ class TimerTraining {
   final Duration executionDuration;
   final Duration restDuration;
   final String voiceFileName;
-  final String alarmFileName;
 
   const TimerTraining({
     required this.countdownTimer,
@@ -12,6 +11,5 @@ class TimerTraining {
     required this.executionDuration,
     required this.restDuration,
     required this.voiceFileName,
-    required this.alarmFileName,
   });
 }

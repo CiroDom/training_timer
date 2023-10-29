@@ -41,13 +41,6 @@ class OurDialog extends StatelessWidget {
                         title: Text(viewModel.getListVoiceTitles[index]),
                         value: viewModel.getListVoiceSelec[index],
                         onChanged: (boolValue) => viewModel.selectVoice(index))),
-                DialogSeparator(categName: 'Alarme final', darkMode: darkMode),
-                ...List.generate(
-                    viewModel.getListAlarmFiles.length,
-                    (index) => CheckboxListTile(
-                      title: Text(viewModel.getListAlarmTitles[index]),
-                      value: viewModel.getListAlarmSelec[index],
-                      onChanged: (boolValue) => viewModel.selectAlarm(index)))
               ],
             );
           }

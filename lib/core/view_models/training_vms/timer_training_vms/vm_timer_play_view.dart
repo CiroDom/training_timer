@@ -27,6 +27,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   bool _paused = false;
   bool _canceledTimer = false;
   bool _brokenSerie = false;
+  bool _pausedWhileCount = false;
   Ticker? _ticker;
 
   // FINAL PROPRIETIES
@@ -61,6 +62,14 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   bool get getPaused => _paused;
 
   // OTHER METHODS
+  void _playCountdown(int countdown) {
+    int counter = countdown;
+
+    Timer.periodic(Duration(seconds: countdown), (timer) {
+      counter--;
+    });
+  }
+
   void _playSound(bool isVoice, String soundName, int countdownBegin) {
     final assetPath =
         isVoice ? 'countdown-voices/$soundName' : 'alarm/$soundName';
@@ -115,8 +124,14 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
   }
 
   Future<void> _goTimer(
-      Duration duration, int countdownBegin, bool training, bool rest) async {
+    Duration duration,
+    int countdownBegin,
+    bool training,
+    bool rest,
+  ) async {
     final completer = Completer();
+    int remainingSecs = 0;
+    bool lessThanCountdown = false;
 
     _currentMilli = duration.inMilliseconds;
 
@@ -127,25 +142,48 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
       rest ? _rest = true : _rest = false;
     }
 
+    bool allowedToPlay = true;
+
     _ticker = Ticker((elapsed) {
       _currentMilli = duration.inMilliseconds - elapsed.inMilliseconds;
+      remainingSecs = (duration - elapsed).inSeconds;
+      lessThanCountdown = remainingSecs < countdownBegin;
 
       _putInRightUnities(_currentMilli);
       _putInPercentual(_currentMilli, duration.inMilliseconds);
 
       notifyListeners();
 
-      if ((duration - elapsed).inSeconds == countdownBegin) {
-        _playSound(true, _model.voiceFileName, countdownBegin);
+      if (_paused) {
+        if (lessThanCountdown) {
+          _audioPlayer.pause();
+          _pausedWhileCount = true;
+        }
+        _ticker?.dispose();
       }
 
-      if (_canceledTimer) {
-        _audioPlayer.stop();
-        _ticker?.dispose();
+      if (_brokenSerie && lessThanCountdown && allowedToPlay) {
+        if (_pausedWhileCount) {
+          _audioPlayer.resume();
+        } else {
+          _playSound(true, _model.voiceFileName, countdownBegin);
+        }
+
+        allowedToPlay = false;
+      }
+
+      if (_brokenSerie == false && lessThanCountdown && allowedToPlay) {
+        _playSound(true, _model.voiceFileName, countdownBegin);
+        allowedToPlay = false;
       }
 
       if (elapsed.inSeconds == duration.inSeconds) {
         completer.complete();
+        _ticker?.dispose();
+      }
+
+      if (_canceledTimer) {
+        _audioPlayer.stop();
         _ticker?.dispose();
       }
     });
@@ -163,7 +201,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
 
       _playSound(
         false,
-        _model.alarmFileName,
+        'alarm.mp3',
         0,
       );
     } else
@@ -203,7 +241,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     return remainingDur;
   }
 
-  Future<void> _restingIfAndElse(bool resting, Duration remaingDur,
+  Future<void> _brokenSerieIfElse(bool resting, Duration remaingDur,
       Duration restDur, int countdownTimer) async {
     final lastSerie = _currentSerie == _model.seriesNumber;
     final lessThanCount = (remaingDur.inSeconds < _model.countdownTimer);
@@ -219,6 +257,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
             true,
             true,
           );
+          _pausedWhileCount = false;
           if (_canceledTimer) break;
         }
       } else {
@@ -246,6 +285,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
             false,
           );
           _brokenSerie = false;
+          _pausedWhileCount = false;
           if (_canceledTimer) break;
           if (lastSerie) break;
           await _goTimer(
@@ -289,7 +329,7 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
     _canceledTimer = false;
     _brokenSerie = true;
 
-    await _restingIfAndElse(_rest, remainDur, restDur, countdownTimer);
+    await _brokenSerieIfElse(_rest, remainDur, restDur, countdownTimer);
   }
 
   void start() async {
@@ -312,7 +352,6 @@ class VmTimerTimeView extends ChangeNotifier implements VmTime {
 
   void pause() async {
     _paused = true;
-    _canceledTimer = true;
 
     notifyListeners();
   }
